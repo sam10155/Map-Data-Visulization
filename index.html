@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Canada Industrial Capacity Viewer</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="map"></div>
+  <div id="controlPanel" class="control-panel">
+    <div class="panel-header" onclick="togglePanel()">
+      <span>🗺️ Layer Controls</span>
+      <span id="toggleIcon">−</span>
+    </div>
+    <div class="panel-content">
+      <div class="stats-box">
+        <div><strong>Facilities</strong></div>
+        <div>Showing <span id="visibleCount">0</span> of <span id="totalCount">0</span></div>
+      </div>
+      <div class="section">
+        <div class="section-title">📊 Datasets</div>
+        <div id="datasetFilters"></div>
+      </div>
+      <div class="section">
+        <div class="section-title">🏭 Sectors</div>
+        <div id="sectorFilters"></div>
+      </div>
+      <div class="section">
+        <div class="section-title">📁 Subcategories</div>
+        <div id="subcategoryFilters"></div>
+      </div>
+      <button class="download-btn" onclick="downloadCSV()">⬇️ Download Visible Facilities</button>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-title">Sector Legend</div>
+    <div style="font-size: 11px; color: #6b7280; margin-bottom: 8px;">Circle size = capacity</div>
+    <div id="legendContent"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="data/canada-data.js"></script>
+  <script src="js/constants.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/download.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/aggregate.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
