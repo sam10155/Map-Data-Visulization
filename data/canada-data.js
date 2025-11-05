@@ -154,6 +154,7 @@ const oilGasProcessingData = [
   {name:'Co-op Refinery Complex Regina',operator:'FCL',sector:'Oil Processing',subcategory:'Domestic Crude Refinery',province:'SK',city:'Regina',lat:50.49,lon:-104.56,capacity:130,unit:'kbbl/d'},
   {name:'Parkland Prince George Refinery',operator:'Parkland',sector:'Oil Processing',subcategory:'Domestic Crude Refinery',province:'BC',city:'Prince George',lat:53.95,lon:-122.78,capacity:12.0,unit:'kbbl/d'},
   {name:'Cenovus Lloydminster Upgrader/Refinery',operator:'Cenovus',sector:'Oil Processing',subcategory:'Domestic Crude Refinery',province:'SK/AB',city:'Lloydminster',lat:53.285,lon:-110.012,capacity:115,unit:'kbbl/d'},
+  {name:'Imperial Oil Nanticoke Refinery',operator:'Imperial Oil',sector:'Oil Processing',subcategory:'Domestic Crude Refinery',province:'ON',city:'Nanticoke',lat:42.80,lon:-80.05,capacity:113.0,unit:'kbbl/d'},
 
   // ===== Oil Processing – Offshore Refineries =====
   {name:'Valero Jean Gaulin Refinery (Lévis)',operator:'Valero',sector:'Oil Processing',subcategory:'Offshore Crude Refinery',province:'QC',city:'Lévis',lat:46.75,lon:-71.21,capacity:265,unit:'kbbl/d'},
@@ -211,10 +212,20 @@ const rawMaterialsProcessingData = [
   // ===== Metals – Aluminum =====
   {name:'Rio Tinto Kitimat',operator:'Rio Tinto',sector:'Metals',subcategory:'Aluminum',province:'BC',city:'Kitimat',lat:54.05,lon:-128.65,capacity:0.42,unit:'MTPA'},
   {name:'Alouette Sept-Îles',operator:'Alouette',sector:'Metals',subcategory:'Aluminum',province:'QC',city:'Sept-Îles',lat:50.21,lon:-66.38,capacity:0.60,unit:'MTPA'},
+  {name:'Rio Tinto Alma Smelter',operator:'Rio Tinto', sector:'Metals', subcategory:'Aluminum',province:'QC', city:'Alma', lat:48.56, lon:-71.66, capacity:0.44, unit:'MTPA' },
+  {name:'Rio Tinto Grande-Baie Smelter',operator:'Rio Tinto',sector:'Metals',subcategory:'Aluminum',province:'QC',city:'Saguenay (Grande-Baie)',lat:48.35,lon:-70.88,capacity:0.207,unit:'MTPA'},
+  {name:'Rio Tinto Arvida AP60 Complex',operator:'Rio Tinto',sector:'Metals',subcategory:'Aluminum',province:'QC',city:'Saguenay (Arvida)',lat:48.41,lon:-71.10,capacity:0.060,unit:'MTPA'},
+  {name:'Alcoa Baie-Comeau Smelter',operator:'Alcoa',sector:'Metals',subcategory:'Aluminum',province:'QC',city:'Baie-Comeau',lat:49.23,lon:-68.15,capacity:0.280,unit:'MTPA'},
+  {name:'ABI – Aluminerie de Bécancour',operator:'Aluminerie de Bécancour (Alcoa/Rio Tinto JV)',sector:'Metals',subcategory:'Aluminum',province:'QC',city:'Bécancour',lat:46.40,lon:-72.37,capacity:0.450,unit:'MTPA'},
 
   // ===== Metals – Copper/Nickel =====
   {name:'Vale Sudbury Smelter',operator:'Vale',sector:'Metals',subcategory:'Copper/Nickel',province:'ON',city:'Sudbury',lat:46.49,lon:-81.01,capacity:0.40,unit:'MTPA'},
   {name:'Teck Trail Smelter',operator:'Teck',sector:'Metals',subcategory:'Copper/Nickel',province:'BC',city:'Trail',lat:49.10,lon:-117.70,capacity:0.50,unit:'MTPA'},
+  {name:'Glencore Horne Smelter (Rouyn-Noranda)',operator:'Glencore',sector:'Metals',subcategory:'Copper/Nickel',province:'QC',city:'Rouyn-Noranda',lat:48.24,lon:-79.02,capacity:0.210,unit:'MTPA'},
+  
+  // ===== Metals - Gold =====
+  {name:'Beacon Mill (Val-d’Or)',operator:'Monarch Mining',sector:'Metals',subcategory:'Other',province:'QC',city:'Val-d’Or',lat:48.10,lon:-77.78,capacity:0.75,unit:'MTPA'},
+  {name:'Canadian Malartic – Processing Plant',operator:'Agnico Eagle',sector:'Metals',subcategory:'Other',province:'QC',city:'Malartic',lat:48.14,lon:-78.13,capacity:20.1,unit:'MTPA'},
 
   // ===== Forest – Pulp =====
   {name:'Resolute Thunder Bay',operator:'Resolute',sector:'Forest',subcategory:'Pulp',province:'ON',city:'Thunder Bay',lat:48.42,lon:-89.27,capacity:0.50,unit:'MTPA'},
@@ -238,6 +249,7 @@ const rawMaterialsProcessingData = [
   {name:'Lafarge Exshaw Cement Plant',operator:'Lafarge',sector:'Minerals',subcategory:'Cement',province:'AB',city:'Exshaw',lat:51.09,lon:-115.19,capacity:2.5,unit:'MTPA'},
   {name:'CRH Joliette Cement',operator:'CRH',sector:'Minerals',subcategory:'Cement',province:'QC',city:'Joliette',lat:46.01,lon:-73.40,capacity:1.2,unit:'MTPA'},
   {name:'Heidelberg (Lehigh) Delta Cement',operator:'Heidelberg Materials',sector:'Minerals',subcategory:'Cement',province:'BC',city:'Delta',lat:49.14,lon:-122.95,capacity:0.80,unit:'MTPA'},
+  {name:'Port-Daniel–Gascons Cement Plant',operator:'Ciment McInnis / Ciment Québec inc.',sector:'Minerals',subcategory:'Cement',province:'QC',city:'Port-Daniel–Gascons',lat:48.17,lon:-64.96,capacity:2.2,unit:'MTPA'},
 
   // ===== Minerals – Glass =====
   {name:'Owens-Illinois Montreal',operator:'Owens-Illinois',sector:'Minerals',subcategory:'Glass',province:'QC',city:'Montréal',lat:45.54,lon:-73.64,capacity:0.25,unit:'MTPA'},
