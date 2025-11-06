@@ -1,39 +1,107 @@
-function toggleDataset(d){ filters.datasets[d]=!filters.datasets[d]; syncSelectAllState('datasets'); updateVisibility(); }
-function toggleSector(s){ filters.sectors[s]=!filters.sectors[s]; syncSelectAllState('sectors'); updateVisibility(); }
-function toggleSubcategory(s){ filters.subcategories[s]=!filters.subcategories[s]; syncSelectAllState('subcategories'); updateVisibility(); }
+function toggleDataset(d) { 
+  filters.datasets[d] = !filters.datasets[d]; 
+  syncSelectAllState('datasets'); 
+  updateVisibility(); 
+}
+
+function toggleSector(s) { 
+  filters.sectors[s] = !filters.sectors[s]; 
+  syncSelectAllState('sectors'); 
+  updateVisibility(); 
+}
+
+function toggleSubcategory(s) { 
+  filters.subcategories[s] = !filters.subcategories[s]; 
+  syncSelectAllState('subcategories'); 
+  updateVisibility(); 
+}
 
 function toggleAll(group, checked) {
+  const target = filters[group]; 
+  if (!target) {
+    console.warn(`toggleAll: filters.${group} is undefined`);
+    return;
+  }
+  
+  // Update all filter states first
+  Object.keys(target).forEach(k => {
+    target[k] = checked;
+  });
+  
+  // Then update all checkboxes in the UI (skip the first one which is "Select All")
   const container = document.getElementById(`${group}Filters`);
-  if (!container) return console.warn(`toggleAll: #${group}Filters missing`);
-  const boxes = container.querySelectorAll('.checkbox-item input[type="checkbox"]');
-  boxes.forEach((box, i) => { if (i !== 0) box.checked = checked; });
-  const target = filters[group]; if (!target) return;
-  Object.keys(target).forEach(k => (target[k] = checked));
-  updateVisibility(); syncSelectAllState(group);
+  if (!container) {
+    console.warn(`toggleAll: #${group}Filters container not found`);
+    return;
+  }
+  
+  const checkboxes = container.querySelectorAll('.checkbox-item input[type="checkbox"]');
+  checkboxes.forEach((checkbox, index) => { 
+    // Skip index 0 (the "Select All" checkbox itself)
+    if (index > 0) {
+      checkbox.checked = checked; 
+    }
+  });
+  
+  // Update visibility and sync the select-all state
+  updateVisibility(); 
+  syncSelectAllState(group);
 }
 
 function syncSelectAllState(group) {
   const container = document.getElementById(`${group}Filters`);
-  if (!container) return;
-  const selectAllBox = container.querySelector('.checkbox-item input[type="checkbox"]');
-  const target = filters[group]; if (!target) return;
-  const vals = Object.values(target);
-  const allOn = vals.every(v => v);
-  const allOff = vals.every(v => !v);
-  selectAllBox.checked = allOn;
-  selectAllBox.indeterminate = !allOn && !allOff;
+  if (!container) {
+    console.warn(`syncSelectAllState: #${group}Filters container not found`);
+    return;
+  }
+  
+  const selectAllCheckbox = container.querySelector('.checkbox-item input[type="checkbox"]');
+  if (!selectAllCheckbox) {
+    console.warn(`syncSelectAllState: Select All checkbox not found in ${group}Filters`);
+    return;
+  }
+  
+  const target = filters[group]; 
+  if (!target) {
+    console.warn(`syncSelectAllState: filters.${group} is undefined`);
+    return;
+  }
+  
+  const filterValues = Object.values(target);
+  const allChecked = filterValues.every(v => v === true);
+  const noneChecked = filterValues.every(v => v === false);
+  
+  // Update the "Select All" checkbox state
+  selectAllCheckbox.checked = allChecked;
+  selectAllCheckbox.indeterminate = !allChecked && !noneChecked;
 }
 
 function updateVisibility() {
   let visible = 0;
+  
   Object.entries(markers).forEach(([key, items]) => {
     const [dataset, sector, ...subcategoryParts] = key.split('_');
     const subcategory = subcategoryParts.join('_');
-    const show = filters.datasets[dataset] && filters.sectors[sector] && filters.subcategories[subcategory];
+    
+    const datasetEnabled = filters.datasets[dataset];
+    const sectorEnabled = filters.sectors[sector];
+    const subcategoryEnabled = filters.subcategories[subcategory];
+    
+    const shouldShow = datasetEnabled && sectorEnabled && subcategoryEnabled;
+    
     items.forEach(({ marker }) => {
-      if (show) { if (!map.hasLayer(marker)) marker.addTo(map); visible++; }
-      else if (map.hasLayer(marker)) map.removeLayer(marker);
+      if (shouldShow) { 
+        if (!map.hasLayer(marker)) {
+          marker.addTo(map);
+        }
+        visible++;
+      } else {
+        if (map.hasLayer(marker)) {
+          map.removeLayer(marker);
+        }
+      }
     });
   });
+  
   document.getElementById('visibleCount').textContent = visible;
 }
