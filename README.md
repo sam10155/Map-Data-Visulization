@@ -11,8 +11,6 @@ The map aggregates facilities by type, capacity, and geography, allowing explora
 
 ![App Screenshot](docs/screenshot.png)
 
-> The above example shows aggregated facility data around major industrial centers (Toronto, Edmonton, Vancouver) with the aggregation mode enabled.
-
 ---
 
 ## 🌍 Features
