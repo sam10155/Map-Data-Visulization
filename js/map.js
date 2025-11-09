@@ -2,7 +2,6 @@ let map;
 let markers = {};
 window.filters = window.filters || { datasets: {}, sectors: {}, subcategories: {} };
 
-
 function initMap() {
   map = L.map('map').setView([55, -100], 4);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -32,22 +31,29 @@ function loadData() {
 
   initializeFilters();
   buildUI();
-
-  const searchBox = document.getElementById('searchInput')?.parentElement || document.querySelector('.stats-box');
-  const toggleSection = document.createElement('div');
-  toggleSection.className = 'section';
-  toggleSection.innerHTML = `
-    <div class="section-title">🧩 Aggregation Mode</div>
-    <label class="checkbox-item">
-      <input type="checkbox" id="aggregateToggle" checked>
-      <span>Enable aggregated pie view (3+ facilities / 50 km)</span>
-    </label>
-  `;
-  searchBox.insertAdjacentElement('afterend', toggleSection);
-  document.getElementById('aggregateToggle').addEventListener('change', e => setAggregationMode(e.target.checked));
-
+  addAggregationSlider();
   updateVisibility();
 }
+
+function addAggregationSlider() {
+  const searchBox = document.querySelector('.stats-box');
+  const sliderSection = document.createElement('div');
+  sliderSection.className = 'section';
+  sliderSection.style.marginTop = '8px';
+  
+  sliderSection.innerHTML = `
+    <div class="section-title">🧩 Aggregation Mode</div>
+    <div class="aggregation-slider">
+      <button id="agg-none" class="agg-option active" onclick="setAggregationMode('none')">None</button>
+      <button id="agg-50km" class="agg-option" onclick="setAggregationMode('50km')">50km</button>
+      <button id="agg-regions" class="agg-option" onclick="setAggregationMode('regions')">Regions</button>
+      <button id="agg-provinces" class="agg-option" onclick="setAggregationMode('provinces')">Provinces</button>
+    </div>
+  `;
+  
+  searchBox.insertAdjacentElement('afterend', sliderSection);
+}
+
 function calculateRadius(f) {
   const scales = { 'bbl': 1e-5, 'm3': 0.01, 'Bcf': 1.0, 'tonnes': 2e-4, 'TEU/yr': 1e-4, 
                    'bbl/d': 0.003, 'MMcf/d': 0.12, 'MTPA': 150, 'kMT/yr': 0.2 };

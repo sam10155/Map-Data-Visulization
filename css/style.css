@@ -8,7 +8,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  max-width: 320px; max-height: 90vh;
+  width: 400px;
+  max-height: 90vh;
   overflow: hidden;
   z-index: 1000;
 }
@@ -22,7 +23,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
 .panel-header:hover { background: #f3f4f6; }
 
 .panel-content {
-  padding: 16px; overflow-y: auto;
+  padding: 16px;
+  overflow-y: auto;
   max-height: calc(90vh - 50px);
 }
 
@@ -75,4 +77,43 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+/* Aggregation Slider Styles */
+.aggregation-slider {
+  display: flex;
+  background: #e5e7eb;
+  border-radius: 6px;
+  padding: 3px;
+  gap: 2px;
+  position: relative;
+}
+
+.agg-option {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.agg-option:hover {
+  color: #374151;
+}
+
+.agg-option.active {
+  background: white;
+  color: #2563eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.agg-option:active {
+  transform: scale(0.98);
 }
