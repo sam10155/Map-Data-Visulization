@@ -50,20 +50,76 @@ function buildSectorFilters() {
 }
 
 function buildSubcategoryFilters() {
-  const UNIT_HINTS = { 'Crude Tank Farm':'bbl','Refined Product Terminal':'m³','Underground Gas Storage':'Bcf','LNG Storage':'m³','LPG/NGL Storage':'bbl','Gas Processing Plant':'MMcf/d','Oilseed':'MTPA','Pulse':'MTPA','Ethanol':'MTPA','Feed':'MTPA','Meat':'kMT/yr','Dairy':'kMT/yr','Seafood':'kMT/yr' };
+  const UNIT_HINTS = { 
+    'Crude Tank Farm':'bbl','Refined Product Terminal':'m³','Underground Gas Storage':'Bcf',
+    'LNG Storage':'m³','LPG/NGL Storage':'bbl','Gas Processing Plant':'MMcf/d',
+    'Oilseed':'MTPA','Pulse':'MTPA','Ethanol':'MTPA','Feed':'MTPA',
+    'Meat':'kMT/yr','Dairy':'kMT/yr','Seafood':'kMT/yr' 
+  };
+
+  const subcategoriesBySector = {};
+  Object.keys(filters.subcategories).forEach(subcat => {
+    let sector = null;
+    Object.values(markers).forEach(items => {
+      items.forEach(({ facility }) => {
+        if (facility.subcategory === subcat) sector = facility.sector;
+      });
+    });
+    if (sector) {
+      if (!subcategoriesBySector[sector]) subcategoriesBySector[sector] = [];
+      subcategoriesBySector[sector].push(subcat);
+    }
+  });
+
   let html = `<label class="checkbox-item" style="font-weight:600;">
     <input type="checkbox" id="selectAll-subcategories" checked onchange="toggleAll('subcategories', this.checked)">
     <span>Select All</span></label>`;
-  Object.keys(filters.subcategories).sort().forEach(s => {
-    const color = SUBCATEGORY_COLORS[s] || '#555';
-    const unit = UNIT_HINTS[s] ? `<span style="color:#6b7280;font-size:11px;">(${UNIT_HINTS[s]})</span>` : '';
-    const escaped = s.replace(/'/g, "\\'");
-    html += `<label class="checkbox-item">
-      <input type="checkbox" data-key="${s}" checked onchange="toggleSubcategory('${escaped}')">
-      <span class="color-dot" style="background:${color}"></span>
-      <span style="font-size:12px;">${s}</span> ${unit}</label>`;
+
+  Object.keys(subcategoriesBySector).sort().forEach(sector => {
+    const sectorColor = SECTOR_COLORS[sector] || '#555';
+    const sectorId = sector.replace(/[^a-zA-Z0-9]/g, '-');
+    const subcats = subcategoriesBySector[sector].sort();
+    
+    // ▼▶ icons flipped: start collapsed (▶)
+    html += `
+      <div class="sector-group">
+        <label class="checkbox-item sector-header" onclick="toggleSectorGroup('${sectorId}')">
+          <span class="expand-icon" id="icon-${sectorId}">▶</span>
+          <span class="color-dot" style="background:${sectorColor}"></span>
+          <span style="font-weight:600;">${sector}</span>
+        </label>
+        <!-- Default collapsed -->
+        <div class="subcategory-group" id="group-${sectorId}" style="display:none;">`;
+    
+    subcats.forEach(subcat => {
+      const color = SUBCATEGORY_COLORS[subcat] || sectorColor;
+      const unit = UNIT_HINTS[subcat] ? `<span style="color:#6b7280;font-size:11px;">(${UNIT_HINTS[subcat]})</span>` : '';
+      const escaped = subcat.replace(/'/g, "\\'");
+      
+      html += `<label class="checkbox-item subcat-item">
+        <input type="checkbox" data-key="${subcat}" checked onchange="toggleSubcategory('${escaped}')">
+        <span class="color-dot" style="background:${color}"></span>
+        <span style="font-size:12px;">${subcat}</span> ${unit}
+      </label>`;
+    });
+    
+    html += `</div></div>`;
   });
+
   document.getElementById('subcategoryFilters').innerHTML = html;
+}
+
+function toggleSectorGroup(sectorId) {
+  const group = document.getElementById(`group-${sectorId}`);
+  const icon = document.getElementById(`icon-${sectorId}`);
+  
+  if (group.style.display === 'none') {
+    group.style.display = 'block';
+    icon.textContent = '▼';
+  } else {
+    group.style.display = 'none';
+    icon.textContent = '▶';
+  }
 }
 
 function buildLegend() {
