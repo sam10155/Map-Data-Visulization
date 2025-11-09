@@ -1,107 +1,97 @@
-function toggleDataset(d) { 
-  filters.datasets[d] = !filters.datasets[d]; 
-  syncSelectAllState('datasets'); 
-  updateVisibility(); 
+window.filters = { datasets: {}, sectors: {}, subcategories: {} };
+
+function toggleDataset(d) {
+  filters.datasets[d] = !filters.datasets[d];
+  const cb = document.querySelector(`#datasetFilters input[data-key="${CSS.escape(d)}"]`);
+  if (cb) cb.checked = filters.datasets[d];
+  syncSelectAllState("datasets");
+  updateVisibility();
 }
 
-function toggleSector(s) { 
-  filters.sectors[s] = !filters.sectors[s]; 
-  syncSelectAllState('sectors'); 
-  updateVisibility(); 
+function toggleSector(s) {
+  filters.sectors[s] = !filters.sectors[s];
+  const cb = document.querySelector(`#sectorFilters input[data-key="${CSS.escape(s)}"]`);
+  if (cb) cb.checked = filters.sectors[s];
+  syncSelectAllState("sectors");
+  updateVisibility();
 }
 
-function toggleSubcategory(s) { 
-  filters.subcategories[s] = !filters.subcategories[s]; 
-  syncSelectAllState('subcategories'); 
-  updateVisibility(); 
+function toggleSubcategory(s) {
+  filters.subcategories[s] = !filters.subcategories[s];
+  const cb = document.querySelector(`#subcategoryFilters input[data-key="${CSS.escape(s)}"]`);
+  if (cb) cb.checked = filters.subcategories[s];
+  syncSelectAllState("subcategories");
+  updateVisibility();
+}
+
+function getContainer(group) {
+  const id =
+    group === 'datasets' ? 'datasetFilters' :
+    group === 'sectors' ? 'sectorFilters' :
+    'subcategoryFilters';
+  return document.getElementById(id);
+}
+
+function getSelectAllEl(group) {
+  const id =
+    group === 'datasets' ? 'selectAll-datasets' :
+    group === 'sectors' ? 'selectAll-sectors' :
+    'selectAll-subcategories';
+  return document.getElementById(id);
 }
 
 function toggleAll(group, checked) {
-  const target = filters[group]; 
-  if (!target) {
-    console.warn(`toggleAll: filters.${group} is undefined`);
-    return;
+  const target = filters[group];
+  if (!target) return;
+
+  Object.keys(target).forEach(k => { target[k] = checked; });
+
+  const container = getContainer(group);
+  const selectAll = getSelectAllEl(group);
+  if (container && selectAll) {
+    const subs = Array.from(container.querySelectorAll('input[type="checkbox"]'))
+      .filter(cb => cb !== selectAll);
+    subs.forEach(cb => { cb.checked = checked; });
   }
-  
-  // Update all filter states first
-  Object.keys(target).forEach(k => {
-    target[k] = checked;
-  });
-  
-  // Then update all checkboxes in the UI (skip the first one which is "Select All")
-  const container = document.getElementById(`${group}Filters`);
-  if (!container) {
-    console.warn(`toggleAll: #${group}Filters container not found`);
-    return;
-  }
-  
-  const checkboxes = container.querySelectorAll('.checkbox-item input[type="checkbox"]');
-  checkboxes.forEach((checkbox, index) => { 
-    // Skip index 0 (the "Select All" checkbox itself)
-    if (index > 0) {
-      checkbox.checked = checked; 
-    }
-  });
-  
-  // Update visibility and sync the select-all state
-  updateVisibility(); 
-  syncSelectAllState(group);
+
+  updateVisibility();
 }
 
 function syncSelectAllState(group) {
-  const container = document.getElementById(`${group}Filters`);
-  if (!container) {
-    console.warn(`syncSelectAllState: #${group}Filters container not found`);
-    return;
-  }
-  
-  const selectAllCheckbox = container.querySelector('.checkbox-item input[type="checkbox"]');
-  if (!selectAllCheckbox) {
-    console.warn(`syncSelectAllState: Select All checkbox not found in ${group}Filters`);
-    return;
-  }
-  
-  const target = filters[group]; 
-  if (!target) {
-    console.warn(`syncSelectAllState: filters.${group} is undefined`);
-    return;
-  }
-  
-  const filterValues = Object.values(target);
-  const allChecked = filterValues.every(v => v === true);
-  const noneChecked = filterValues.every(v => v === false);
-  
-  // Update the "Select All" checkbox state
-  selectAllCheckbox.checked = allChecked;
-  selectAllCheckbox.indeterminate = !allChecked && !noneChecked;
+  const target = filters[group];
+  if (!target) return;
+
+  const selectAll = getSelectAllEl(group);
+  if (!selectAll) return;
+
+  const vals = Object.values(target);
+  const allChecked = vals.every(Boolean);
+  const noneChecked = vals.every(v => !v);
+
+  selectAll.checked = allChecked;
+  selectAll.indeterminate = !allChecked && !noneChecked;
 }
 
 function updateVisibility() {
   let visible = 0;
-  
+
   Object.entries(markers).forEach(([key, items]) => {
-    const [dataset, sector, ...subcategoryParts] = key.split('_');
-    const subcategory = subcategoryParts.join('_');
-    
-    const datasetEnabled = filters.datasets[dataset];
-    const sectorEnabled = filters.sectors[sector];
-    const subcategoryEnabled = filters.subcategories[subcategory];
-    
-    const shouldShow = datasetEnabled && sectorEnabled && subcategoryEnabled;
-    
-    items.forEach(({ marker }) => {
-      if (shouldShow) { 
-        if (!map.hasLayer(marker)) {
-          marker.addTo(map);
-        }
+    items.forEach(({ marker, facility }) => {
+      const datasetOn = filters.datasets[facility.dataset];
+      const sectorOn = filters.sectors[facility.sector];
+      const subOn = filters.subcategories[facility.subcategory];
+      
+      const show = datasetOn && sectorOn && subOn;
+
+      if (show) {
+        if (!map.hasLayer(marker)) marker.addTo(map);
         visible++;
-      } else {
-        if (map.hasLayer(marker)) {
-          map.removeLayer(marker);
-        }
+      } else if (map.hasLayer(marker)) {
+        map.removeLayer(marker);
       }
     });
   });
-  
-  document.getElementById('visibleCount').textContent = visible;
+
+  const el = document.getElementById("visibleCount");
+  if (el) el.textContent = visible;
 }

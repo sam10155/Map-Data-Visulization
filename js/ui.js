@@ -25,23 +25,25 @@ function buildUI() {
 
 function buildDatasetFilters() {
   let html = `<label class="checkbox-item" style="font-weight:600;">
-    <input type="checkbox" checked onchange="toggleAll('datasets', this.checked)">
+    <input type="checkbox" id="selectAll-datasets" checked onchange="toggleAll('datasets', this.checked)">
     <span>Select All</span></label>`;
   Object.keys(filters.datasets).sort().forEach(d => {
+    const escaped = d.replace(/'/g, "\\'");
     html += `<label class="checkbox-item">
-      <input type="checkbox" checked onchange="toggleDataset('${d}')">${d}</label>`;
+      <input type="checkbox" data-key="${d}" checked onchange="toggleDataset('${escaped}')">${d}</label>`;
   });
   document.getElementById('datasetFilters').innerHTML = html;
 }
 
 function buildSectorFilters() {
   let html = `<label class="checkbox-item" style="font-weight:600;">
-    <input type="checkbox" checked onchange="toggleAll('sectors', this.checked)">
+    <input type="checkbox" id="selectAll-sectors" checked onchange="toggleAll('sectors', this.checked)">
     <span>Select All</span></label>`;
   Object.keys(filters.sectors).sort().forEach(s => {
     const color = SECTOR_COLORS[s] || '#555';
+    const escaped = s.replace(/'/g, "\\'");
     html += `<label class="checkbox-item">
-      <input type="checkbox" checked onchange="toggleSector('${s}')">
+      <input type="checkbox" data-key="${s}" checked onchange="toggleSector('${escaped}')">
       <span class="color-dot" style="background:${color}"></span>${s}</label>`;
   });
   document.getElementById('sectorFilters').innerHTML = html;
@@ -50,13 +52,14 @@ function buildSectorFilters() {
 function buildSubcategoryFilters() {
   const UNIT_HINTS = { 'Crude Tank Farm':'bbl','Refined Product Terminal':'m³','Underground Gas Storage':'Bcf','LNG Storage':'m³','LPG/NGL Storage':'bbl','Gas Processing Plant':'MMcf/d','Oilseed':'MTPA','Pulse':'MTPA','Ethanol':'MTPA','Feed':'MTPA','Meat':'kMT/yr','Dairy':'kMT/yr','Seafood':'kMT/yr' };
   let html = `<label class="checkbox-item" style="font-weight:600;">
-    <input type="checkbox" checked onchange="toggleAll('subcategories', this.checked)">
+    <input type="checkbox" id="selectAll-subcategories" checked onchange="toggleAll('subcategories', this.checked)">
     <span>Select All</span></label>`;
   Object.keys(filters.subcategories).sort().forEach(s => {
     const color = SUBCATEGORY_COLORS[s] || '#555';
     const unit = UNIT_HINTS[s] ? `<span style="color:#6b7280;font-size:11px;">(${UNIT_HINTS[s]})</span>` : '';
+    const escaped = s.replace(/'/g, "\\'");
     html += `<label class="checkbox-item">
-      <input type="checkbox" checked onchange="toggleSubcategory('${s}')">
+      <input type="checkbox" data-key="${s}" checked onchange="toggleSubcategory('${escaped}')">
       <span class="color-dot" style="background:${color}"></span>
       <span style="font-size:12px;">${s}</span> ${unit}</label>`;
   });

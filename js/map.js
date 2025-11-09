@@ -1,4 +1,7 @@
-let map, markers = {}, filters = { datasets: {}, sectors: {}, subcategories: {} };
+let map;
+let markers = {};
+window.filters = window.filters || { datasets: {}, sectors: {}, subcategories: {} };
+
 
 function initMap() {
   map = L.map('map').setView([55, -100], 4);

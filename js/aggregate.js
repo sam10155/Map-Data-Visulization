@@ -21,7 +21,13 @@ function haversine(lat1, lon1, lat2, lon2) {
 }
 
 function computeSpatialClusters() {
-  const facilities = Object.values(markers).flatMap(items => items.map(i => i.facility));
+  const facilities = Object.values(markers)
+  .flatMap(items => items.map(i => i.facility))
+  .filter(f =>
+    filters.datasets[f.dataset] &&
+    filters.sectors[f.sector] &&
+    filters.subcategories[f.subcategory]
+  );
   const clusters = [];
 
   facilities.forEach(fac => {
