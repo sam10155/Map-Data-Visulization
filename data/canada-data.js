@@ -255,7 +255,6 @@ const oilGasProcessingData = [
   {name:'Imperial Oil Nanticoke Refinery',operator:'Imperial Oil',sector:'Oil Processing',subcategory:'Domestic Crude Refinery',province:'ON',city:'Nanticoke',lat:42.80,lon:-80.05,capacity:113.0,unit:'kbbl/d'},
   {name:'Imperial Oil Sarnia Refinery',operator:'Imperial Oil',sector:'Oil Processing',subcategory:'Domestic Crude Refinery',province:'ON',city:'Sarnia',lat:42.997,lon:-82.381,capacity:121,unit:'kbbl/d'},
   {name:'Imperial Strathcona Refinery',operator:'Imperial Oil',sector:'Oil Processing',subcategory:'Domestic Crude Refinery',province:'AB',city:'Strathcona County',lat:53.57,lon:-113.36,capacity:191,unit:'kbbl/d'},
-  {name:'Irving Oil Refinery',operator:'Irving Oil',sector:'Oil Processing',subcategory:'Domestic Crude Refinery',province:'NB',city:'Saint John',lat:45.26,lon:-66.05,capacity:320000,unit:'bbl/d'},
   {name:'North West Redwater Sturgeon Refinery',operator:'NW Redwater Partnership',sector:'Oil Processing',subcategory:'Domestic Crude Refinery',province:'AB',city:'Sturgeon County',lat:53.88,lon:-113.32,capacity:80,unit:'kbbl/d'},
   {name:'Parkland Prince George Refinery',operator:'Parkland',sector:'Oil Processing',subcategory:'Domestic Crude Refinery',province:'BC',city:'Prince George',lat:53.95,lon:-122.78,capacity:12.0,unit:'kbbl/d'},
   {name:'Shell Scotford Upgrader',operator:'Shell Canada',sector:'Oil Processing',subcategory:'Bitumen Upgrader',province:'AB',city:'Fort Saskatchewan',lat:53.77,lon:-113.17,capacity:255,unit:'kbbl/d'},
@@ -390,6 +389,8 @@ const rawMaterialsProcessingData = [
   {name:'Resolute Thunder Bay',operator:'Resolute',sector:'Forest',subcategory:'Pulp',province:'ON',city:'Thunder Bay',lat:48.42,lon:-89.27,capacity:0.50,unit:'MTPA'},
   {name:'Scotia Atlantic Biomass Mill Site',operator:'Group Savoie',sector:'Forest',subcategory:'Pellet Plant',province:'NS',city:'Middleton',lat:45.007,lon:-65.160,capacity:0.12,unit:'MTPA'},
   {name:'Twin Rivers Paper Mill',operator:'Twin Rivers Paper',sector:'Forest',subcategory:'Pulp',province:'NB',city:'Edmundston',lat:47.37,lon:-68.32,capacity:0.18,unit:'MTPA'},
+  {name:'Harmac Pacific Pulp Mill',operator:'Harmac Pacific',sector:'Forest',subcategory:'Pulp',province:'BC',city:'Nanaimo',lat:49.135,lon:-123.854,capacity:0.37,unit:'MTPA'},
+  {name:'Paper Excellence Crofton',operator:'Paper Excellence',sector:'Forest',subcategory:'Pulp/Paper',province:'BC',city:'Crofton',lat:48.84,lon:-123.63,capacity:0.40,unit:'MTPA'},
 
   // Forest – Sawmills & Panels
   {name:'Canfor Houston Sawmill',operator:'Canfor',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Houston',lat:54.40,lon:-126.64,capacity:650000,unit:'m3/yr'},
@@ -404,6 +405,16 @@ const rawMaterialsProcessingData = [
   {name:'West Fraser Quesnel',operator:'West Fraser',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Quesnel',lat:52.98,lon:-122.49,capacity:600000,unit:'m3/yr'},
   {name:'West Fraser Quesnel Plywood',operator:'West Fraser',sector:'Forest',subcategory:'Panels',province:'BC',city:'Quesnel',lat:52.99,lon:-122.50,capacity:300000,unit:'m3/yr'},
   {name:'West Fraser Williams Lake Sawmill',operator:'West Fraser',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Williams Lake',lat:52.14,lon:-122.15,capacity:700000,unit:'m3/yr'},
+  {name:'Western Forest Products Duke Point Sawmill',operator:'Western Forest Products',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Nanaimo (Duke Point)',lat:49.147,lon:-123.886,capacity:300000,unit:'m3/yr'},
+  {name:'Western Forest Products Chemainus Sawmill',operator:'Western Forest Products',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Chemainus',lat:48.922,lon:-123.725,capacity:250000,unit:'m3/yr'},
+  {name:'Western Forest Products Cowichan Bay Sawmill',operator:'Western Forest Products',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Cowichan Bay',lat:48.747,lon:-123.617,capacity:200000,unit:'m3/yr'},
+  {name:'Western Forest Products Ladysmith Sawmill',operator:'Western Forest Products',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Ladysmith',lat:49.002,lon:-123.823,capacity:200000,unit:'m3/yr'},
+  {name:'San Group Port Alberni Mill',operator:'San Group',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Port Alberni',lat:49.235,lon:-124.806,capacity:350000,unit:'m3/yr'},
+  {name:'Western Forest Products Saltair Sawmill',operator:'Western Forest Products',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Ladysmith (Saltair)',lat:48.996,lon:-123.816,capacity:300000,unit:'m3/yr'},
+  {name:'Western Forest Products Somass Division',operator:'Western Forest Products',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Port Alberni',lat:49.233,lon:-124.808,capacity:200000,unit:'m3/yr'},
+  {name:'Western Forest Products Alberni Pacific Division (APD)',operator:'Western Forest Products',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Port Alberni',lat:49.235,lon:-124.812,capacity:250000,unit:'m3/yr'},
+  {name:'Western Forest Products Cowichan Bay Veneer Plant',operator:'Western Forest Products',sector:'Forest',subcategory:'Panels',province:'BC',city:'Cowichan Bay',lat:48.748,lon:-123.621,capacity:150000,unit:'m3/yr'},
+  {name:'Edgewood Forest Products Port McNeill Sawmill',operator:'Edgewood Forest Products',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Port McNeill',lat:50.59,lon:-127.09,capacity:150000,unit:'m3/yr'},
 
   // Minerals – Cement
   {name:'Ash Grove Cement (Morden)',operator:'Ash Grove',sector:'Minerals',subcategory:'Cement',province:'MB',city:'Morden',lat:49.19,lon:-98.10,capacity:0.50,unit:'MTPA'},
