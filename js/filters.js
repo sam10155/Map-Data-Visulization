@@ -44,8 +44,10 @@ function toggleAll(group, checked) {
   const target = filters[group];
   if (!target) return;
 
+  // Update model
   Object.keys(target).forEach(k => { target[k] = checked; });
 
+  // Update UI checkboxes
   const container = getContainer(group);
   const selectAll = getSelectAllEl(group);
   if (container && selectAll) {
@@ -77,10 +79,12 @@ function updateVisibility() {
 
   Object.entries(markers).forEach(([key, items]) => {
     items.forEach(({ marker, facility }) => {
+      // Use facility properties for hierarchical check
       const datasetOn = filters.datasets[facility.dataset];
       const sectorOn = filters.sectors[facility.sector];
       const subOn = filters.subcategories[facility.subcategory];
       
+      // All three must be true
       const show = datasetOn && sectorOn && subOn;
 
       if (show) {

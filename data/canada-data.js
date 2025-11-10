@@ -246,8 +246,8 @@ const storageData = [
 // DATASET 2: OIL & GAS PROCESSING
 // ============================================================
 const oilGasProcessingData = [
-  // Oil Processing – Domestic Refineries (Alphabetical)
-  {name:'Cenovus Lloydminster Upgrader/Refinery',operator:'Cenovus',sector:'Oil Processing',subcategory:'Domestic Crude Refinery',province:'SK/AB',city:'Lloydminster',lat:53.285,lon:-110.012,capacity:115,unit:'kbbl/d'},
+  // Oil Processing – Domestic Refineries
+  {name:'Cenovus Lloydminster Upgrader/Refinery',operator:'Cenovus',sector:'Oil Processing',subcategory:'Domestic Crude Refinery',province:'AB',city:'Lloydminster',lat:53.285,lon:-110.012,capacity:115,unit:'kbbl/d'},
   {name:'CNRL Albian Sands Muskeg River Upgrader',operator:'CNRL',sector:'Oil Processing',subcategory:'Bitumen Upgrader',province:'AB',city:'Fort McMurray Region',lat:57.17,lon:-111.58,capacity:155,unit:'kbbl/d'},
   {name:'CNRL Horizon Upgrader',operator:'CNRL',sector:'Oil Processing',subcategory:'Bitumen Upgrader',province:'AB',city:'Fort McMurray',lat:57.32,lon:-111.78,capacity:250,unit:'kbbl/d'},
   {name:'Co-op Refinery Complex Regina',operator:'FCL',sector:'Oil Processing',subcategory:'Domestic Crude Refinery',province:'SK',city:'Regina',lat:50.49,lon:-104.56,capacity:130,unit:'kbbl/d'},
@@ -264,32 +264,32 @@ const oilGasProcessingData = [
   {name:'Suncor Fort Hills Bitumen Plant',operator:'Suncor',sector:'Oil Processing',subcategory:'Bitumen Upgrader',province:'AB',city:'Fort McMurray (Fort Hills)',lat:57.34,lon:-111.55,capacity:194,unit:'kbbl/d'},
   {name:'Syncrude Mildred Lake Upgrader',operator:'Suncor/Syncrude',sector:'Oil Processing',subcategory:'Bitumen Upgrader',province:'AB',city:'Fort McMurray',lat:57.03,lon:-111.61,capacity:350,unit:'kbbl/d'},
 
-  // Oil Processing – Offshore Refineries (Alphabetical)
+  // Oil Processing – Offshore Refineries
   {name:'Braya Refining (Renewables conversion site)',operator:'Braya',sector:'Oil Processing',subcategory:'Offshore Crude Refinery',province:'NL',city:'Come-by-Chance',lat:47.81,lon:-54.02,capacity:0,unit:'kbbl/d'},
   {name:'Irving Oil Saint John Refinery',operator:'Irving Oil',sector:'Oil Processing',subcategory:'Offshore Crude Refinery',province:'NB',city:'Saint John',lat:45.27,lon:-66.03,capacity:320,unit:'kbbl/d'},
   {name:'Suncor Montréal Refinery',operator:'Suncor',sector:'Oil Processing',subcategory:'Offshore Crude Refinery',province:'QC',city:'Montréal',lat:45.62,lon:-73.56,capacity:137,unit:'kbbl/d'},
   {name:'Valero Jean Gaulin Refinery (Lévis)',operator:'Valero',sector:'Oil Processing',subcategory:'Offshore Crude Refinery',province:'QC',city:'Lévis',lat:46.75,lon:-71.21,capacity:265,unit:'kbbl/d'},
 
-  // Oil Processing – Petrochemical / Feedstock (Alphabetical)
+  // Oil Processing – Petrochemical / Feedstock
   {name:'Dow Fort Saskatchewan Ethylene Complex',operator:'Dow',sector:'Oil Processing',subcategory:'Petrochemical/Feedstock',province:'AB',city:'Fort Saskatchewan',lat:53.71,lon:-113.19,capacity:180,unit:'kbbl/d eq'},
   {name:'NOVA Chemicals Corunna (Cracker/Fractionation)',operator:'NOVA Chemicals',sector:'Oil Processing',subcategory:'Petrochemical/Feedstock',province:'ON',city:'Corunna',lat:42.90,lon:-82.42,capacity:150,unit:'kbbl/d eq'},
 
-  // Petrochemicals / Polymers (Alphabetical)
+  // Petrochemicals / Polymers
   {name:'Inter Pipeline Heartland PP Complex',operator:'Inter Pipeline',sector:'Oil Processing',subcategory:'Petrochemical/Polypropylene',province:'AB',city:'Strathcona County',lat:53.754,lon:-113.128,capacity:525,unit:'kT/yr'},
   {name:'NOVA Chemicals Joffre Complex (Ethylene)',operator:'NOVA Chemicals',sector:'Oil Processing',subcategory:'Petrochemical/Feedstock',province:'AB',city:'Joffre',lat:52.259,lon:-113.535,capacity:2800,unit:'kT/yr'},
   {name:'Pembina PDH/PP (Redwater)',operator:'Pembina',sector:'Oil Processing',subcategory:'Petrochemical/PDH+PP',province:'AB',city:'Redwater',lat:53.952,lon:-113.106,capacity:550,unit:'kT/yr'},
 
-  // Oil Processing – Renewables (Alphabetical)
+  // Oil Processing – Renewables
   {name:'Braya Renewable Fuels (Come-by-Chance)',operator:'Braya',sector:'Oil Processing',subcategory:'Renewables',province:'NL',city:'Come-by-Chance',lat:47.81,lon:-54.02,capacity:18.0,unit:'kbbl/d eq'},
   {name:'Parkland Burnaby (Co-processing)',operator:'Parkland',sector:'Oil Processing',subcategory:'Renewables',province:'BC',city:'Burnaby',lat:49.17,lon:-123.03,capacity:6.0,unit:'kbbl/d eq'},
 
-  // Gas Processing – Gas Plants (Alphabetical)
+  // Gas Processing – Gas Plants
   {name:'AltaGas Blair Creek Gas Plant',operator:'AltaGas',sector:'Gas Processing',subcategory:'Gas Processing Plant',province:'BC',city:'NE BC (Blair Creek)',lat:57.00,lon:-122.20,capacity:84.0,unit:'MMcf/d'},
   {name:'AltaGas Harmattan Gas Processing Complex',operator:'AltaGas',sector:'Gas Processing',subcategory:'Gas Processing Plant',province:'AB',city:'Didsbury (Harmattan)',lat:51.88,lon:-114.31,capacity:490,unit:'MMcf/d'},
   {name:'AltaGas Townsend Gas Plant',operator:'AltaGas',sector:'Gas Processing',subcategory:'Gas Processing Plant',province:'BC',city:'NE BC (Townsend)',lat:57.59,lon:-122.32,capacity:198,unit:'MMcf/d'},
   {name:'Cenovus Foster Creek Gas Plant',operator:'Cenovus',sector:'Gas Processing',subcategory:'Gas Processing Plant',province:'AB',city:'Cold Lake Region',lat:55.50,lon:-110.80,capacity:150,unit:'MMcf/d'},
   {name:'Coleville Gas Plant',operator:'ARC Resources',sector:'Gas Processing',subcategory:'Gas Processing Plant',province:'SK',city:'Coleville',lat:51.37,lon:-109.56,capacity:35,unit:'MMcf/d'},
-  {name:'Empress Straddle Plant (AB side)',operator:'Multiple (Pembina/TC)',sector:'Gas Processing',subcategory:'Gas Processing Plant',provitnce:'AB',city:'Empress',lat:50.05,lon:-110.00,capacity:2000,unit:'MMcf/d'},
+  {name:'Empress Straddle Plant (AB side)',operator:'Multiple (Pembina/TC)',sector:'Gas Processing',subcategory:'Gas Processing Plant',province:'AB',city:'Empress',lat:50.05,lon:-110.00,capacity:2000,unit:'MMcf/d'},
   {name:'Husky Ram River Gas Plant',operator:'Cenovus (Husky)',sector:'Gas Processing',subcategory:'Gas Processing Plant',province:'AB',city:'Rocky Mountain House',lat:52.19,lon:-115.70,capacity:140,unit:'MMcf/d'},
   {name:'Keyera Fort Saskatchewan Gas Complex',operator:'Keyera',sector:'Gas Processing',subcategory:'Gas Processing Plant',province:'AB',city:'Fort Saskatchewan',lat:53.71,lon:-113.22,capacity:600,unit:'MMcf/d'},
   {name:'Keyera Simonette Gas Plant',operator:'Keyera',sector:'Gas Processing',subcategory:'Gas Processing Plant',province:'AB',city:'Grande Prairie (Simonette)',lat:54.07,lon:-118.70,capacity:300,unit:'MMcf/d'},
@@ -303,13 +303,13 @@ const oilGasProcessingData = [
   {name:'Steelman Gas Plant',operator:'Whitecap Resources',sector:'Gas Processing',subcategory:'Gas Processing Plant',province:'SK',city:'Steelman',lat:49.46,lon:-102.08,capacity:30,unit:'MMcf/d'},
   {name:'TAQA North Crossfield Gas Plant',operator:'TAQA North',sector:'Gas Processing',subcategory:'Gas Processing Plant',province:'AB',city:'Crossfield',lat:51.46,lon:-114.05,capacity:120,unit:'MMcf/d'},
 
-  // Gas Processing – NGL Fractionation (Alphabetical)
+  // Gas Processing – NGL Fractionation
   {name:'AltaGas North Pine Liquids Separation',operator:'AltaGas',sector:'Gas Processing',subcategory:'NGL Fractionation',province:'BC',city:'North Pine (near FSJ)',lat:57.04,lon:-121.59,capacity:10.0,unit:'kbbl/d'},
   {name:'Keyera KFS Fractionators',operator:'Keyera',sector:'Gas Processing',subcategory:'NGL Fractionation',province:'AB',city:'Fort Saskatchewan',lat:53.73,lon:-113.24,capacity:110,unit:'kbbl/d'},
   {name:'NOVA Corunna Fractionator',operator:'NOVA Chemicals',sector:'Gas Processing',subcategory:'NGL Fractionation',province:'ON',city:'Corunna',lat:42.91,lon:-82.36,capacity:100,unit:'kbbl/d'},
   {name:'Pembina Redwater Fractionation Complex',operator:'Pembina',sector:'Gas Processing',subcategory:'NGL Fractionation',province:'AB',city:'Redwater',lat:53.94,lon:-113.10,capacity:200,unit:'kbbl/d'},
 
-  // Gas Processing – LNG (Alphabetical)
+  // Gas Processing – LNG
   {name:'Énergir Montréal-Est LNG',operator:'Énergir (Gaz Métro)',sector:'Gas Processing',subcategory:'LNG Processing',province:'QC',city:'Montréal-Est',lat:45.62,lon:-73.49,capacity:0.3,unit:'MTPA'},
   {name:'FortisBC Tilbury LNG',operator:'FortisBC',sector:'Gas Processing',subcategory:'LNG Processing',province:'BC',city:'Delta (Tilbury)',lat:49.13,lon:-123.06,capacity:0.6,unit:'MTPA'},
   {name:'LNG Canada (Kitimat)',operator:'LNG Canada',sector:'Gas Processing',subcategory:'LNG Processing',province:'BC',city:'Kitimat',lat:54.01,lon:-128.65,capacity:14.0,unit:'MTPA'}
@@ -319,7 +319,7 @@ const oilGasProcessingData = [
 // DATASET 3: RAW MATERIALS PROCESSING
 // ============================================================
 const rawMaterialsProcessingData = [
-  // Metals – Steel (Alphabetical)
+  // Metals – Steel
   {name:'Algoma Steel',operator:'Algoma Steel',sector:'Metals',subcategory:'Steel',province:'ON',city:'Sault Ste. Marie',lat:46.53,lon:-84.35,capacity:3.0,unit:'MTPA'},
   {name:'ArcelorMittal Dofasco',operator:'ArcelorMittal',sector:'Metals',subcategory:'Steel',province:'ON',city:'Hamilton',lat:43.26,lon:-79.83,capacity:2.5,unit:'MTPA'},
   {name:'ArcelorMittal Hamilton East (Finishing Works)',operator:'ArcelorMittal',sector:'Metals',subcategory:'Steel Finishing',province:'ON',city:'Hamilton',lat:43.27,lon:-79.84,capacity:1.0,unit:'MTPA'},
@@ -332,7 +332,7 @@ const rawMaterialsProcessingData = [
   {name:'Stelco Lake Erie Works',operator:'Stelco',sector:'Metals',subcategory:'Steel',province:'ON',city:'Nanticoke',lat:42.783,lon:-80.054,capacity:2.6,unit:'MTPA'},
   {name:'Tenaris Algoma Tubes',operator:'Tenaris',sector:'Metals',subcategory:'Steel Pipe',province:'ON',city:'Sault Ste. Marie',lat:46.52,lon:-84.32,capacity:0.30,unit:'MTPA'},
 
-  // Metals – Aluminum (Alphabetical)
+  // Metals – Aluminum
   {name:'ABI - Aluminerie de Bécancour',operator:'Aluminerie de Bécancour (Alcoa/Rio Tinto JV)',sector:'Metals',subcategory:'Aluminum',province:'QC',city:'Bécancour',lat:46.40,lon:-72.37,capacity:0.450,unit:'MTPA'},
   {name:'Alcoa Baie-Comeau Smelter',operator:'Alcoa',sector:'Metals',subcategory:'Aluminum',province:'QC',city:'Baie-Comeau',lat:49.23,lon:-68.15,capacity:0.280,unit:'MTPA'},
   {name:'Alcoa Deschambault Smelter',operator:'Alcoa',sector:'Metals',subcategory:'Aluminum',province:'QC',city:'Deschambault-Grondines',lat:46.68,lon:-71.93,capacity:0.275,unit:'MTPA'},
@@ -344,7 +344,7 @@ const rawMaterialsProcessingData = [
   {name:'Rio Tinto Kitimat',operator:'Rio Tinto',sector:'Metals',subcategory:'Aluminum',province:'BC',city:'Kitimat',lat:54.05,lon:-128.65,capacity:0.42,unit:'MTPA'},
   {name:'Rio Tinto Laterrière Smelter',operator:'Rio Tinto',sector:'Metals',subcategory:'Aluminum',province:'QC',city:'Saguenay (Laterrière)',lat:48.25,lon:-71.15,capacity:0.245,unit:'MTPA'},
 
-  // Metals – Copper/Nickel/Zinc/Lead/Iron (Alphabetical)
+  // Metals – Copper/Nickel/Zinc/Lead/Iron
   {name:'ArcelorMittal Mont-Wright Concentrator',operator:'ArcelorMittal Mines Canada',sector:'Metals',subcategory:'Iron Ore Concentrator',province:'QC',city:'Fermont (Mont-Wright)',lat:52.79,lon:-67.10,capacity:24,unit:'MTPA'},
   {name:'Baffinland Mary River Mine & Crusher',operator:'Baffinland Iron Mines',sector:'Metals',subcategory:'Iron Ore',province:'NU',city:'Mary River',lat:71.33,lon:-79.67,capacity:6,unit:'MTPA'},
   {name:'Glencore Horne Smelter (Rouyn-Noranda)',operator:'Glencore',sector:'Metals',subcategory:'Copper/Nickel',province:'QC',city:'Rouyn-Noranda',lat:48.24,lon:-79.02,capacity:0.210,unit:'MTPA'},
@@ -358,7 +358,7 @@ const rawMaterialsProcessingData = [
   {name:'Vale Long Harbour Nickel Processing Plant',operator:'Vale',sector:'Metals',subcategory:'Nickel/Copper/Cobalt Processing',province:'NL',city:'Long Harbour',lat:47.43,lon:-54.05,capacity:0.05,unit:'MTPA'},
   {name:'Vale Sudbury Smelter',operator:'Vale',sector:'Metals',subcategory:'Copper/Nickel',province:'ON',city:'Sudbury',lat:46.49,lon:-81.01,capacity:0.40,unit:'MTPA'},
   
-  // Metals - Gold (Alphabetical)
+  // Metals - Gold
   {name:'Agnico Eagle Meadowbank/Amaruq Mill',operator:'Agnico Eagle',sector:'Metals',subcategory:'Gold',province:'NU',city:'Baker Lake',lat:65.00,lon:-96.08,capacity:0.45,unit:'MTPA'},
   {name:'Agnico Eagle Meliadine Gold Processing Plant',operator:'Agnico Eagle',sector:'Metals',subcategory:'Gold',province:'NU',city:'Rankin Inlet',lat:62.90,lon:-92.00,capacity:0.4,unit:'MTPA'},
   {name:'Beacon Mill (Val-d-Or)',operator:'Monarch Mining',sector:'Metals',subcategory:'Gold Processing Plant',province:'QC',city:'Val-d-Or',lat:48.10,lon:-77.78,capacity:0.274,unit:'MTPA'},
@@ -372,12 +372,12 @@ const rawMaterialsProcessingData = [
   {name:'Victoria Gold Eagle Gold Mine',operator:'Victoria Gold',sector:'Metals',subcategory:'Gold',province:'YT',city:'Mayo (Dublin Gulch)',lat:63.91,lon:-135.38,capacity:0.6,unit:'MTPA'},
   {name:'Young-Davidson Processing Plant',operator:'Alamos Gold',sector:'Metals',subcategory:'Gold Processing Plant',province:'ON',city:'Matachewan',lat:48.22,lon:-80.64,capacity:2.92,unit:'MTPA'}, 
   
-  // Minerals - Diamonds (Alphabetical)
+  // Minerals - Diamonds
   {name:'Diavik Diamond Mine Process Plant',operator:'Rio Tinto',sector:'Metals',subcategory:'Diamonds',province:'NT',city:'Lac de Gras',lat:64.49,lon:-110.28,capacity:6,unit:'MTPA'},
   {name:'Ekati Diamond Mine Process Plant',operator:'Arctic Canadian Diamond Company',sector:'Metals',subcategory:'Diamonds',province:'NT',city:'Lac de Gras',lat:64.70,lon:-110.55,capacity:6,unit:'MTPA'},
   {name:'Gahcho Kué Diamond Mine Mill',operator:'De Beers Canada',sector:'Metals',subcategory:'Diamonds',province:'NT',city:'Kennady Lake',lat:63.37,lon:-109.21,capacity:4.5,unit:'MTPA'},
 
-  // Forest – Pulp (Alphabetical)
+  // Forest – Pulp
   {name:'AV Group Atholville Pulp Mill',operator:'AV Group',sector:'Forest',subcategory:'Pulp',province:'NB',city:'Atholville',lat:47.99,lon:-66.68,capacity:0.15,unit:'MTPA'},
   {name:'AV Group Nackawic Pulp Mill',operator:'AV Group',sector:'Forest',subcategory:'Pulp',province:'NB',city:'Nackawic',lat:45.97,lon:-67.25,capacity:0.15,unit:'MTPA'},
   {name:'Catalyst Paper Port Alberni Mill',operator:'Paper Excellence',sector:'Forest',subcategory:'Pulp/Paper',province:'BC',city:'Port Alberni',lat:49.24,lon:-124.82,capacity:0.33,unit:'MTPA'},
@@ -391,7 +391,7 @@ const rawMaterialsProcessingData = [
   {name:'Scotia Atlantic Biomass Mill Site',operator:'Group Savoie',sector:'Forest',subcategory:'Pellet Plant',province:'NS',city:'Middleton',lat:45.007,lon:-65.160,capacity:0.12,unit:'MTPA'},
   {name:'Twin Rivers Paper Mill',operator:'Twin Rivers Paper',sector:'Forest',subcategory:'Pulp',province:'NB',city:'Edmundston',lat:47.37,lon:-68.32,capacity:0.18,unit:'MTPA'},
 
-  // Forest – Sawmills & Panels (Alphabetical)
+  // Forest – Sawmills & Panels
   {name:'Canfor Houston Sawmill',operator:'Canfor',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Houston',lat:54.40,lon:-126.64,capacity:650000,unit:'m3/yr'},
   {name:'Canfor Prince George',operator:'Canfor',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Prince George',lat:53.91,lon:-122.75,capacity:550000,unit:'m3/yr'},
   {name:'Interfor Castlegar Sawmill',operator:'Interfor',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Castlegar',lat:49.31,lon:-117.65,capacity:500000,unit:'m3/yr'},
@@ -405,7 +405,7 @@ const rawMaterialsProcessingData = [
   {name:'West Fraser Quesnel Plywood',operator:'West Fraser',sector:'Forest',subcategory:'Panels',province:'BC',city:'Quesnel',lat:52.99,lon:-122.50,capacity:300000,unit:'m3/yr'},
   {name:'West Fraser Williams Lake Sawmill',operator:'West Fraser',sector:'Forest',subcategory:'Sawmills',province:'BC',city:'Williams Lake',lat:52.14,lon:-122.15,capacity:700000,unit:'m3/yr'},
 
-  // Minerals – Cement (Alphabetical)
+  // Minerals – Cement
   {name:'Ash Grove Cement (Morden)',operator:'Ash Grove',sector:'Minerals',subcategory:'Cement',province:'MB',city:'Morden',lat:49.19,lon:-98.10,capacity:0.50,unit:'MTPA'},
   {name:'Blue Mountain Minerals Bowmanville',operator:'Blue Mountain Minerals',sector:'Minerals',subcategory:'Lime/Aggregate',province:'ON',city:'Bowmanville',lat:43.91,lon:-78.68,capacity:0.20,unit:'MTPA'},
   {name:'Carmeuse Beachville Lime Plant',operator:'Carmeuse',sector:'Minerals',subcategory:'Lime',province:'ON',city:'Beachville',lat:43.11,lon:-80.78,capacity:0.60,unit:'MTPA'},
@@ -422,17 +422,17 @@ const rawMaterialsProcessingData = [
   {name:'Port-Daniel–Gascons Cement Plant',operator:'Ciment McInnis / Ciment Québec inc.',sector:'Minerals',subcategory:'Cement',province:'QC',city:'Port-Daniel–Gascons',lat:48.17,lon:-64.96,capacity:2.2,unit:'MTPA'},
   {name:'St. Marys Bowmanville',operator:'St. Marys',sector:'Minerals',subcategory:'Cement',province:'ON',city:'Bowmanville',lat:43.90,lon:-78.69,capacity:1.5,unit:'MTPA'},
 
-  // Minerals – Glass (Alphabetical)
+  // Minerals – Glass
   {name:'Owens-Illinois Montreal',operator:'Owens-Illinois',sector:'Minerals',subcategory:'Glass',province:'QC',city:'Montréal',lat:45.54,lon:-73.64,capacity:0.25,unit:'MTPA'},
   {name:'Owens-Illinois Montreal Glass Plant',operator:'O-I Glass',sector:'Minerals',subcategory:'Glass',province:'QC',city:'Montréal',lat:45.54,lon:-73.64,capacity:0.25,unit:'MTPA'},
   {name:'Vitro Flat Glass Windsor',operator:'Vitro',sector:'Minerals',subcategory:'Glass',province:'ON',city:'Windsor',lat:42.29,lon:-83.02,capacity:0.30,unit:'MTPA'},
 
-  // Minerals - Uranium (Alphabetical)
+  // Minerals - Uranium
   {name:'Cameco Cigar Lake Mine',operator:'Cameco',sector:'Metals',subcategory:'Uranium',province:'SK',city:'Cigar Lake',lat:58.07,lon:-104.52,capacity:9,unit:'MTPA'},
   {name:'Cameco Key Lake Mill',operator:'Cameco',sector:'Metals',subcategory:'Uranium',province:'SK',city:'Key Lake',lat:57.19,lon:-105.61,capacity:6.4,unit:'MTPA'},
   {name:'Cameco McClean Lake Mill',operator:'Orano/Cameco',sector:'Metals',subcategory:'Uranium',province:'SK',city:'McClean Lake',lat:58.36,lon:-104.72,capacity:12,unit:'MTPA'},
 
-  // Minerals – Other (Salt / Potash etc.) - Alphabetical
+  // Minerals – Other (Salt / Potash etc.)
   {name:'Nutrien Rocanville',operator:'Nutrien',sector:'Minerals',subcategory:'Other',province:'SK',city:'Rocanville',lat:50.47,lon:-102.33,capacity:2.8,unit:'MTPA'},
   {name:'Windsor Salt',operator:'Windsor Salt',sector:'Minerals',subcategory:'Other',province:'ON',city:'Windsor',lat:42.31,lon:-83.06,capacity:0.60,unit:'MTPA'},
   {name:'Windsor Salt (Goderich surface ops)',operator:'Windsor Salt',sector:'Minerals',subcategory:'Salt Mine',province:'ON',city:'Goderich',lat:43.75,lon:-81.71,capacity:1.5,unit:'MTPA'},
@@ -444,8 +444,8 @@ const rawMaterialsProcessingData = [
 // DATASET 4: AGRICULTURAL PROCESSING
 // ============================================================
 const agriProcessingData = [
-  // Crop-based – Oilseed (Alphabetical)
-  {name:'ADM Lloydminster (Canola)',operator:'ADM',sector:'Agricultural Processing',subcategory:'Oilseed',province:'AB/SK',city:'Lloydminster',lat:53.28,lon:-110.03,capacity:1.2,unit:'MTPA'},
+  // Crop-based – Oilseed 
+  {name:'ADM Lloydminster (Canola)',operator:'ADM',sector:'Agricultural Processing',subcategory:'Oilseed',province:'AB',city:'Lloydminster',lat:53.28,lon:-110.03,capacity:1.2,unit:'MTPA'},
   {name:'ADM Windsor (Soy/Oilseeds)',operator:'ADM',sector:'Agricultural Processing',subcategory:'Oilseed',province:'ON',city:'Windsor',lat:42.30,lon:-83.06,capacity:1.3,unit:'MTPA'},
   {name:'Bunge Altona (Canola)',operator:'Bunge',sector:'Agricultural Processing',subcategory:'Oilseed',province:'MB',city:'Altona',lat:49.10,lon:-97.56,capacity:0.90,unit:'MTPA'},
   {name:'Bunge Altona Canola Plant',operator:'Bunge',sector:'Agricultural Processing',subcategory:'Oilseed',province:'MB',city:'Altona',lat:49.10,lon:-97.56,capacity:0.4,unit:'MTPA'},
@@ -461,7 +461,7 @@ const agriProcessingData = [
   {name:'Richardson Yorkton Expansion Plant',operator:'Richardson International',sector:'Agricultural Processing',subcategory:'Oilseed (Canola Crushing)',province:'SK',city:'Yorkton',lat:51.22,lon:-102.43,capacity:2.2,unit:'MTPA'},
   {name:'Viterra Yorkton Canola Plant',operator:'Viterra',sector:'Agricultural Processing',subcategory:'Oilseed (Canola Crushing)',province:'SK',city:'Yorkton',lat:51.21,lon:-102.44,capacity:1.1,unit:'MTPA'},
 
-  // Fertiliser - Processing (Alphabetical)
+  // Fertiliser - Processing
   {name:'K+S Bethune Potash Plant',operator:'K+S Potash Canada',sector:'Agricultural Processing',subcategory:'Fertilizer (Potash)',province:'SK',city:'Bethune',lat:50.80,lon:-105.24,capacity:2.0,unit:'MTPA'},
   {name:'Mosaic Esterhazy K3 Mine & Mill',operator:'Mosaic',sector:'Agricultural Processing',subcategory:'Fertilizer (Potash)',province:'SK',city:'Esterhazy',lat:50.65,lon:-102.05,capacity:4.0,unit:'MTPA'},
   {name:'Nutrien Carseland Fertilizer Complex',operator:'Nutrien',sector:'Agricultural Processing',subcategory:'Fertilizer (Nitrogen)',province:'AB',city:'Carseland',lat:50.84,lon:-113.46,capacity:0.60,unit:'MTPA'},
@@ -471,11 +471,11 @@ const agriProcessingData = [
   {name:'Sussex Rail Potash Loadout',operator:'Nutrien',sector:'Agricultural Processing',subcategory:'Fertilizer (Potash)',province:'NB',city:'Penobsquis',lat:45.73,lon:-65.39,capacity:2.0,unit:'MTPA'},
   {name:'Yara Belle Plaine Ammonia/Urea',operator:'Yara',sector:'Agricultural Processing',subcategory:'Fertilizer (Nitrogen)',province:'SK',city:'Belle Plaine',lat:50.47,lon:-105.08,capacity:0.76,unit:'MTPA'},
 
-  // Crop-based – Pulse (Alphabetical)
+  // Crop-based – Pulse
   {name:'AGT Foods Regina (Pulse)',operator:'AGT Foods',sector:'Agricultural Processing',subcategory:'Pulse',province:'SK',city:'Regina',lat:50.44,lon:-104.68,capacity:0.25,unit:'MTPA'},
   {name:'Roquette (Pea Protein)',operator:'Roquette',sector:'Agricultural Processing',subcategory:'Pulse',province:'MB',city:'Portage la Prairie',lat:49.99,lon:-98.34,capacity:0.25,unit:'MTPA'},
 
-  // Crop-based – Ethanol (Alphabetical)
+  // Crop-based – Ethanol
   {name:'Greenfield Ethanol Chatham',operator:'Greenfield',sector:'Agricultural Processing',subcategory:'Ethanol',province:'ON',city:'Chatham',lat:42.42,lon:-82.18,capacity:0.16,unit:'MTPA'},
   {name:'Greenfield Varennes (Ethanol)',operator:'Greenfield',sector:'Agricultural Processing',subcategory:'Ethanol',province:'QC',city:'Varennes',lat:45.69,lon:-73.44,capacity:0.32,unit:'MTPA'},
   {name:'Husky (FCL) Minnedosa Ethanol',operator:'Federated Co-op',sector:'Agricultural Processing',subcategory:'Ethanol',province:'MB',city:'Minnedosa',lat:50.24,lon:-99.84,capacity:0.10,unit:'MTPA'},
@@ -484,13 +484,13 @@ const agriProcessingData = [
   {name:'Pound-Maker Biofuels Lanigan',operator:'Pound-Maker',sector:'Agricultural Processing',subcategory:'Ethanol',province:'SK',city:'Lanigan',lat:51.86,lon:-105.04,capacity:0.15,unit:'MTPA'},
   {name:'Terra Grain Fuels Ethanol Plant',operator:'Terra Grain Fuels',sector:'Agricultural Processing',subcategory:'Ethanol',province:'SK',city:'Belle Plaine',lat:50.45,lon:-105.02,capacity:0.15,unit:'MTPA'},
 
-  // Crop-based – Feed (Alphabetical)
+  // Crop-based – Feed
   {name:'FCL Feed (Saskatoon)',operator:'FCL',sector:'Agricultural Processing',subcategory:'Feed',province:'SK',city:'Saskatoon',lat:52.12,lon:-106.67,capacity:0.20,unit:'MTPA'},
   {name:'FCL Feed Lethbridge',operator:'Federated Co-op',sector:'Agricultural Processing',subcategory:'Feed',province:'AB',city:'Lethbridge',lat:49.70,lon:-112.81,capacity:0.20,unit:'MTPA'},
   {name:'Hi-Pro Feeds Lethbridge',operator:'Hi-Pro',sector:'Agricultural Processing',subcategory:'Feed',province:'AB',city:'Lethbridge',lat:49.70,lon:-112.81,capacity:0.20,unit:'MTPA'},
   {name:'Maple Leaf Brandon Feed',operator:'Maple Leaf',sector:'Agricultural Processing',subcategory:'Feed',province:'MB',city:'Brandon',lat:49.86,lon:-99.98,capacity:0.30,unit:'MTPA'},
 
-  // Animal – Meat (Alphabetical)
+  // Animal – Meat
   {name:'Cargill Guelph (Beef)',operator:'Cargill',sector:'Agricultural Processing',subcategory:'Meat',province:'ON',city:'Guelph',lat:43.52,lon:-80.22,capacity:120,unit:'kMT/yr'},
   {name:'Cargill High River (Beef)',operator:'Cargill',sector:'Agricultural Processing',subcategory:'Meat',province:'AB',city:'High River',lat:50.59,lon:-113.87,capacity:450,unit:'kMT/yr'},
   {name:'JBS Brooks (Beef)',operator:'JBS',sector:'Agricultural Processing',subcategory:'Meat',province:'AB',city:'Brooks',lat:50.57,lon:-111.89,capacity:430,unit:'kMT/yr'},
@@ -500,14 +500,14 @@ const agriProcessingData = [
   {name:'Olymel Red Deer (Pork)',operator:'Olymel',sector:'Agricultural Processing',subcategory:'Meat',province:'AB',city:'Red Deer',lat:52.32,lon:-113.74,capacity:140,unit:'kMT/yr'},
   {name:'Sofina Burlington (Poultry)',operator:'Sofina Foods',sector:'Agricultural Processing',subcategory:'Meat',province:'ON',city:'Burlington',lat:43.32,lon:-79.81,capacity:45,unit:'kMT/yr'},
 
-  // Crop-based – Sugar/Starch (Alphabetical)
+  // Crop-based – Sugar/Starch
   {name:'ADM Milling Mississauga',operator:'ADM',sector:'Agricultural Processing',subcategory:'Flour Milling',province:'ON',city:'Mississauga',lat:43.62,lon:-79.63,capacity:0.25,unit:'MTPA'},
   {name:'Parrish & Heimbecker Milling Plant',operator:'P&H',sector:'Agricultural Processing',subcategory:'Flour Milling',province:'MB',city:'Winnipeg',lat:49.91,lon:-97.10,capacity:0.25,unit:'MTPA'},
   {name:'Rogers Sugar (Taber)',operator:'Rogers Sugar',sector:'Agricultural Processing',subcategory:'Sugar/Starch',province:'AB',city:'Taber',lat:49.79,lon:-112.15,capacity:0.13,unit:'MTPA'},
   {name:'Rogers Sugar Montréal',operator:'Rogers Sugar',sector:'Agricultural Processing',subcategory:'Sugar/Starch',province:'QC',city:'Montréal',lat:45.54,lon:-73.53,capacity:0.24,unit:'MTPA'},
   {name:'Rogers Sugar Vancouver',operator:'Rogers Sugar',sector:'Agricultural Processing',subcategory:'Sugar/Starch',province:'BC',city:'Vancouver',lat:49.28,lon:-123.09,capacity:0.10,unit:'MTPA'},
 
-  // Dairy Processing (Alphabetical)
+  // Dairy Processing
   {name:'Agropur Saint-Laurent',operator:'Agropur',sector:'Agricultural Processing',subcategory:'Dairy',province:'QC',city:'Montréal (Saint-Laurent)',lat:45.50,lon:-73.69,capacity:300,unit:'kMT/yr'},
   {name:'Agropur St-Hyacinthe',operator:'Agropur',sector:'Agricultural Processing',subcategory:'Dairy',province:'QC',city:'St-Hyacinthe',lat:45.63,lon:-72.95,capacity:300,unit:'kMT/yr'},
   {name:'Amalgamated Dairies Limited (ADL) Summerside',operator:'ADL Co-op',sector:'Agricultural Processing',subcategory:'Dairy Products',province:'PE',city:'Summerside',lat:46.40,lon:-63.79,capacity:120,unit:'kMT/yr'},
@@ -519,16 +519,16 @@ const agriProcessingData = [
   {name:'Saputo Burnaby',operator:'Saputo',sector:'Agricultural Processing',subcategory:'Dairy',province:'BC',city:'Burnaby',lat:49.25,lon:-122.99,capacity:120,unit:'kMT/yr'},
   {name:'Saputo Port Coquitlam',operator:'Saputo',sector:'Agricultural Processing',subcategory:'Dairy',province:'BC',city:'Port Coquitlam',lat:49.27,lon:-122.77,capacity:140,unit:'kMT/yr'},
 
-  // Beverage (Alphabetical)
+  // Beverage
   {name:'Coca-Cola Brampton Bottling Facility',operator:'Coca-Cola Canada',sector:'Agricultural Processing',subcategory:'Beverage',province:'ON',city:'Brampton',lat:43.70,lon:-79.73,capacity:250,unit:'kMT/yr'},
 
-  // General Foods (Alphabetical)
+  // General Foods
   {name:'Cavendish Farms New Annan Plant',operator:'Cavendish Farms',sector:'Agricultural Processing',subcategory:'Frozen Food (Potato Processing)',province:'PE',city:'New Annan',lat:46.42,lon:-63.73,capacity:300,unit:'kMT/yr'},
   {name:'Kellogg-s Cereal Plant Belleville',operator:'Kellogg-s',sector:'Agricultural Processing',subcategory:'Cereal/Grain Processing',province:'ON',city:'Belleville',lat:44.17,lon:-77.38,capacity:200,unit:'kMT/yr'},
   {name:'McCain Carberry Potato Plant',operator:'McCain Foods',sector:'Agricultural Processing',subcategory:'Potato Processing',province:'MB',city:'Carberry',lat:49.88,lon:-99.36,capacity:250,unit:'kMT/yr'},
   {name:'PepsiCo Frito-Lay Cambridge',operator:'PepsiCo',sector:'Agricultural Processing',subcategory:'Snacks (Potato/Corn)',province:'ON',city:'Cambridge',lat:43.37,lon:-80.29,capacity:300,unit:'kMT/yr'},
 
-  // Seafood Processing (Alphabetical)
+  // Seafood Processing
   {name:'Alder Point Fisheries Facility',operator:'Alder Point Fisheries',sector:'Agricultural Processing',subcategory:'Seafood',province:'NS',city:'Alder Point',lat:46.217,lon:-60.273,capacity:12,unit:'kMT/yr'},
   {name:'Clearwater Seafoods – Lunenburg',operator:'Clearwater',sector:'Agricultural Processing',subcategory:'Seafood',province:'NS',city:'Lunenburg',lat:44.37,lon:-64.32,capacity:20,unit:'kMT/yr'},
   {name:'Coast Tsimshian Seafood (Prince Rupert)',operator:'Lax Kw-alaams/Partners',sector:'Agricultural Processing',subcategory:'Seafood',province:'BC',city:'Prince Rupert',lat:54.32,lon:-130.33,capacity:66,unit:'kMT/yr'},
@@ -556,8 +556,6 @@ const agriProcessingData = [
 // ============================================================
 // EXPORT FOR USE IN VIEWER
 // ============================================================
-
-// Combined export with dataset identifiers
 const allFacilities = [
   ...storageData.map(f => ({...f, dataset: 'Storage'})),
   ...oilGasProcessingData.map(f => ({...f, dataset: 'Oil & Gas Processing'})),
@@ -565,7 +563,6 @@ const allFacilities = [
   ...agriProcessingData.map(f => ({...f, dataset: 'Agricultural Processing'}))
 ];
 
-// If using in browser, expose to window
 if (typeof window !== 'undefined') {
   window.canadaIndustrialData = {
     storage: storageData,
@@ -576,7 +573,6 @@ if (typeof window !== 'undefined') {
   };
 }
 
-// For Node.js/module exports
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     storageData,

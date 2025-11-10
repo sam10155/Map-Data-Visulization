@@ -15,8 +15,7 @@ function initializeFilters() {
 
 function buildUI() {
   buildDatasetFilters();
-  buildSectorFilters();
-  buildSubcategoryFilters();
+  buildCombinedSectorFilters();
   buildLegend();
 
   document.getElementById('totalCount').textContent =
@@ -35,21 +34,7 @@ function buildDatasetFilters() {
   document.getElementById('datasetFilters').innerHTML = html;
 }
 
-function buildSectorFilters() {
-  let html = `<label class="checkbox-item" style="font-weight:600;">
-    <input type="checkbox" id="selectAll-sectors" checked onchange="toggleAll('sectors', this.checked)">
-    <span>Select All</span></label>`;
-  Object.keys(filters.sectors).sort().forEach(s => {
-    const color = SECTOR_COLORS[s] || '#555';
-    const escaped = s.replace(/'/g, "\\'");
-    html += `<label class="checkbox-item">
-      <input type="checkbox" data-key="${s}" checked onchange="toggleSector('${escaped}')">
-      <span class="color-dot" style="background:${color}"></span>${s}</label>`;
-  });
-  document.getElementById('sectorFilters').innerHTML = html;
-}
-
-function buildSubcategoryFilters() {
+function buildCombinedSectorFilters() {
   const UNIT_HINTS = { 
     'Crude Tank Farm':'bbl','Refined Product Terminal':'m³','Underground Gas Storage':'Bcf',
     'LNG Storage':'m³','LPG/NGL Storage':'bbl','Gas Processing Plant':'MMcf/d',
@@ -57,6 +42,7 @@ function buildSubcategoryFilters() {
     'Meat':'kMT/yr','Dairy':'kMT/yr','Seafood':'kMT/yr' 
   };
 
+  // Group subcategories by sector
   const subcategoriesBySector = {};
   Object.keys(filters.subcategories).forEach(subcat => {
     let sector = null;
@@ -72,23 +58,23 @@ function buildSubcategoryFilters() {
   });
 
   let html = `<label class="checkbox-item" style="font-weight:600;">
-    <input type="checkbox" id="selectAll-subcategories" checked onchange="toggleAll('subcategories', this.checked)">
+    <input type="checkbox" id="selectAll-sectors" checked onchange="toggleAllSectorsAndSubs(this.checked)">
     <span>Select All</span></label>`;
 
   Object.keys(subcategoriesBySector).sort().forEach(sector => {
     const sectorColor = SECTOR_COLORS[sector] || '#555';
     const sectorId = sector.replace(/[^a-zA-Z0-9]/g, '-');
     const subcats = subcategoriesBySector[sector].sort();
+    const escapedSector = sector.replace(/'/g, "\\'");
     
-    // ▼▶ icons flipped: start collapsed (▶)
     html += `
       <div class="sector-group">
-        <label class="checkbox-item sector-header" onclick="toggleSectorGroup('${sectorId}')">
-          <span class="expand-icon" id="icon-${sectorId}">▶</span>
+        <div class="checkbox-item sector-header">
+          <input type="checkbox" data-key="${sector}" data-sector-id="${sectorId}" checked onchange="toggleSectorWithSubs('${escapedSector}', '${sectorId}', this.checked)">
+          <span class="expand-icon" id="icon-${sectorId}" onclick="toggleSectorGroup('${sectorId}', event)">▶</span>
           <span class="color-dot" style="background:${sectorColor}"></span>
-          <span style="font-weight:600;">${sector}</span>
-        </label>
-        <!-- Default collapsed -->
+          <span style="font-weight:600;" onclick="toggleSectorGroup('${sectorId}', event)" style="cursor:pointer;">${sector}</span>
+        </div>
         <div class="subcategory-group" id="group-${sectorId}" style="display:none;">`;
     
     subcats.forEach(subcat => {
@@ -97,7 +83,7 @@ function buildSubcategoryFilters() {
       const escaped = subcat.replace(/'/g, "\\'");
       
       html += `<label class="checkbox-item subcat-item">
-        <input type="checkbox" data-key="${subcat}" checked onchange="toggleSubcategory('${escaped}')">
+        <input type="checkbox" data-key="${subcat}" data-parent-sector="${sectorId}" checked onchange="toggleSubcategoryInSector('${escaped}', '${escapedSector}')">
         <span class="color-dot" style="background:${color}"></span>
         <span style="font-size:12px;">${subcat}</span> ${unit}
       </label>`;
@@ -106,10 +92,13 @@ function buildSubcategoryFilters() {
     html += `</div></div>`;
   });
 
-  document.getElementById('subcategoryFilters').innerHTML = html;
+  document.getElementById('sectorFilters').innerHTML = html;
 }
 
-function toggleSectorGroup(sectorId) {
+function toggleSectorGroup(sectorId, event) {
+  // Prevent checkbox toggle when clicking arrow
+  if (event) event.stopPropagation();
+  
   const group = document.getElementById(`group-${sectorId}`);
   const icon = document.getElementById(`icon-${sectorId}`);
   
@@ -120,6 +109,98 @@ function toggleSectorGroup(sectorId) {
     group.style.display = 'none';
     icon.textContent = '▶';
   }
+}
+
+function toggleSectorWithSubs(sector, sectorId, checked) {
+  // Update sector filter
+  filters.sectors[sector] = checked;
+  
+  // Update all subcategories under this sector
+  const group = document.getElementById(`group-${sectorId}`);
+  if (group) {
+    const subCheckboxes = group.querySelectorAll('input[type="checkbox"]');
+    subCheckboxes.forEach(cb => {
+      const subKey = cb.getAttribute('data-key');
+      if (subKey) {
+        filters.subcategories[subKey] = checked;
+        cb.checked = checked;
+      }
+    });
+  }
+  
+  syncSelectAllSectorsState();
+  updateVisibility();
+}
+
+function toggleSubcategoryInSector(subcat, sector) {
+  filters.subcategories[subcat] = !filters.subcategories[subcat];
+  
+  const cb = document.querySelector(`input[data-key="${CSS.escape(subcat)}"]`);
+  if (cb) cb.checked = filters.subcategories[subcat];
+  
+  // Check if all subcategories in this sector are checked/unchecked
+  updateSectorCheckbox(sector);
+  syncSelectAllSectorsState();
+  updateVisibility();
+}
+
+function updateSectorCheckbox(sector) {
+  const sectorId = sector.replace(/[^a-zA-Z0-9]/g, '-');
+  const sectorCheckbox = document.querySelector(`input[data-sector-id="${sectorId}"]`);
+  const group = document.getElementById(`group-${sectorId}`);
+  
+  if (sectorCheckbox && group) {
+    const subCheckboxes = Array.from(group.querySelectorAll('input[type="checkbox"]'));
+    const allChecked = subCheckboxes.every(cb => cb.checked);
+    const noneChecked = subCheckboxes.every(cb => !cb.checked);
+    
+    sectorCheckbox.checked = allChecked;
+    sectorCheckbox.indeterminate = !allChecked && !noneChecked;
+    
+    // Update sector filter state
+    filters.sectors[sector] = allChecked || !noneChecked;
+  }
+}
+
+function toggleAllSectorsAndSubs(checked) {
+  // Update all sectors
+  Object.keys(filters.sectors).forEach(s => {
+    filters.sectors[s] = checked;
+  });
+  
+  // Update all subcategories
+  Object.keys(filters.subcategories).forEach(s => {
+    filters.subcategories[s] = checked;
+  });
+  
+  // Update all checkboxes in UI
+  const container = document.getElementById('sectorFilters');
+  if (container) {
+    const allCheckboxes = container.querySelectorAll('input[type="checkbox"]');
+    allCheckboxes.forEach(cb => {
+      if (cb.id !== 'selectAll-sectors') {
+        cb.checked = checked;
+        cb.indeterminate = false;
+      }
+    });
+  }
+  
+  updateVisibility();
+}
+
+function syncSelectAllSectorsState() {
+  const selectAll = document.getElementById('selectAll-sectors');
+  if (!selectAll) return;
+  
+  const allSectorVals = Object.values(filters.sectors);
+  const allSubVals = Object.values(filters.subcategories);
+  const allVals = [...allSectorVals, ...allSubVals];
+  
+  const allChecked = allVals.every(Boolean);
+  const noneChecked = allVals.every(v => !v);
+  
+  selectAll.checked = allChecked;
+  selectAll.indeterminate = !allChecked && !noneChecked;
 }
 
 function buildLegend() {

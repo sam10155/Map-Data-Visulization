@@ -46,8 +46,8 @@ function addAggregationSlider() {
     <div class="aggregation-slider">
       <button id="agg-none" class="agg-option active" onclick="setAggregationMode('none')">None</button>
       <button id="agg-50km" class="agg-option" onclick="setAggregationMode('50km')">50km</button>
-      <button id="agg-regions" class="agg-option" onclick="setAggregationMode('regions')">Regions</button>
       <button id="agg-provinces" class="agg-option" onclick="setAggregationMode('provinces')">Provinces</button>
+      <button id="agg-regions" class="agg-option" onclick="setAggregationMode('regions')">Regions</button>
     </div>
   `;
   
