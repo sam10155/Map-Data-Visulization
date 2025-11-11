@@ -18,7 +18,7 @@ The map aggregates facilities by type, capacity, and geography, allowing explora
 ## 🌍 Features
 
 - 🗺️ **Interactive Leaflet Map** — zoomable, color-coded markers by capacity  
-- 🧩 **Aggregation Mode (Pie View)** — combines nearby facilities into city-level pie charts [50km|Provinces|Regions]  
+- 🧩 **Aggregation Mode (Pie View)** — pie chart aggregation [50km|Provinces|Regions]  
 - 🔍 **Search** — find facilities by name, city, or operator  
 - 🧮 **Filters** — by dataset, sector, or subcategory (with unit hints)  
 - 📊 **Capacity Scaling** — marker radius scales by reported capacity  
