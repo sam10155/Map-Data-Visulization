@@ -18,7 +18,7 @@ The map aggregates facilities by type, capacity, and geography, allowing explora
 ## 🌍 Features
 
 - 🗺️ **Interactive Leaflet Map** — zoomable, color-coded markers by capacity  
-- 🧩 **Aggregation Mode (Pie View)** — combines nearby facilities into city-level pie charts (3+ facilities within 50 km)  
+- 🧩 **Aggregation Mode (Pie View)** — combines nearby facilities into city-level pie charts [50km|Provinces|Regions]  
 - 🔍 **Search** — find facilities by name, city, or operator  
 - 🧮 **Filters** — by dataset, sector, or subcategory (with unit hints)  
 - 📊 **Capacity Scaling** — marker radius scales by reported capacity  
@@ -131,11 +131,10 @@ And exposes `window.canadaIndustrialData = { storage, oilGasProcessing, rawMater
 
 ## 🚀 Roadmap
 
-- [ ] Province / region summary charts  
 - [ ] Optional dark/satellite basemaps  
 - [ ] Export to GeoJSON / Shapefile  
-- [ ] Automatic dataset validation & normalization  
-- [ ] Live enrichment via open government data portals  
+- [ ] Convert Tableview to 1/3 screen map overlay 
+- [ ] Live enrichment via open government/regulator data portals  
 
 ---
 
@@ -145,9 +144,3 @@ And exposes `window.canadaIndustrialData = { storage, oilGasProcessing, rawMater
 Feel free to fork, adapt, and reuse with attribution.
 
 ---
-
-## 🙌 Acknowledgments
-
-- [Leaflet](https://leafletjs.com/) — open-source map library  
-- [OpenStreetMap](https://www.openstreetmap.org/) — base map tiles  
-- Canadian open industrial data sources

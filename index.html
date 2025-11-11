@@ -8,6 +8,7 @@
 </head>
 <body>
   <div id="map"></div>
+
   <div id="controlPanel" class="control-panel">
     <div class="panel-header" onclick="togglePanel()">
       <span>🗺️ Layer Controls</span>
@@ -30,16 +31,38 @@
     </div>
   </div>
 
+  <div id="viewToggle">
+    <button id="toggleViewBtn">📊 Table View</button>
+  </div>
+  
   <div class="legend">
     <div class="legend-title">Sector Legend</div>
     <div style="font-size: 11px; color: #6b7280; margin-bottom: 8px;">Circle size = capacity</div>
     <div id="legendContent"></div>
   </div>
 
+  <div id="tableView" class="hidden">
+    <div id="tableControls">
+      <label>Province:</label>
+      <select id="provinceFilter"><option value="">All</option></select>
+      <label>Sector:</label>
+      <select id="sectorFilter"><option value="">All</option></select>
+      <label>Subcategory:</label>
+      <select id="subcategoryFilter"><option value="">All</option></select>
+      <input type="text" id="searchBox" placeholder="Search by name or city...">
+      <button id="exportCsv">⬇️ Export CSV</button>
+    </div>
+    <table id="dataTable">
+      <thead><tr id="tableHeader"></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="data/canada-data.js"></script>
   <script src="js/constants.js"></script>
   <script src="js/map.js"></script>
+  <script src="js/tableview.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/download.js"></script>

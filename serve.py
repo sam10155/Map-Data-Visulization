@@ -27,7 +27,7 @@ def run_server():
 
     local_ip = socket.gethostbyname(socket.gethostname())
     print(f"\n[-] Serving HTTP on \033[96mhttp://{HOST}:{PORT}\033[0m")
-    print(f"💡 Accessible on local network (if allowed): \033[96mhttp://{local_ip}:{PORT}\033[0m\n")
+    print(f"[-] Accessible on local network (if allowed): \033[96mhttp://{local_ip}:{PORT}\033[0m\n")
     print("Press Ctrl+C to stop the server.\n")
 
     try:

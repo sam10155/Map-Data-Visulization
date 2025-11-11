@@ -229,3 +229,31 @@ function addAggregationToggle() {
     .getElementById('aggregateToggle')
     .addEventListener('change', e => setAggregationMode(e.target.checked));
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("toggleViewBtn");
+  const mapDiv = document.getElementById("map");
+  const tableDiv = document.getElementById("tableView");
+  const controlPanel = document.getElementById("controlPanel");
+  const legend = document.querySelector(".legend");
+
+  btn.addEventListener("click", () => {
+    const isMapVisible = mapDiv.style.display !== "none";
+
+    if (isMapVisible) {
+      // Hide map, show table
+      mapDiv.style.display = "none";
+      controlPanel.style.display = "none";
+      legend.style.display = "none";
+      tableDiv.classList.remove("hidden");
+      btn.textContent = "🗺️ Map View";
+    } else {
+      // Show map, hide table
+      mapDiv.style.display = "block";
+      controlPanel.style.display = "block";
+      legend.style.display = "block";
+      tableDiv.classList.add("hidden");
+      btn.textContent = "📊 Table View";
+    }
+  });
+});
