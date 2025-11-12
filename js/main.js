@@ -4,6 +4,6 @@ window.addEventListener('load', () => {
   setTimeout(() => {
     buildSearchIndex();
     attachSearchUI();
-	attachAggregationEvents();
+	  attachAggregationEvents();
   }, 1000);
 });

@@ -17,9 +17,35 @@ function buildUI() {
   buildDatasetFilters();
   buildCombinedSectorFilters();
   buildLegend();
+  buildMetricControls();
 
   document.getElementById('totalCount').textContent =
     Object.values(markers).reduce((sum, items) => sum + items.length, 0);
+}
+
+function buildMetricControls() {
+  const controlPanel = document.getElementById('controlPanel');
+  if (!controlPanel || document.getElementById('metric-section')) return;
+
+  const section = document.createElement('div');
+  section.id = 'metric-section';
+  section.className = 'section';
+  section.style.display = 'none';
+
+  section.innerHTML = `
+    <div class="aggregation-slider">
+      <button id="metric-facilities" class="agg-option active" onclick="setMetric('facilities')">Facilities</button>
+      <button id="metric-capacities" class="agg-option" onclick="setMetric('capacities')">Capacities</button>
+      <button id="metric-workers" class="agg-option" onclick="setMetric('workers')">Workers</button>
+    </div>
+  `;
+
+  const aggSection = controlPanel.querySelector('.aggregation-slider');
+  if (aggSection && aggSection.parentElement.classList.contains('section')) {
+    aggSection.parentElement.insertAdjacentElement('afterend', section);
+  } else {
+    controlPanel.querySelector('.panel-content').prepend(section);
+  }
 }
 
 function buildDatasetFilters() {
@@ -42,7 +68,6 @@ function buildCombinedSectorFilters() {
     'Meat':'kMT/yr','Dairy':'kMT/yr','Seafood':'kMT/yr' 
   };
 
-  // Group subcategories by sector
   const subcategoriesBySector = {};
   Object.keys(filters.subcategories).forEach(subcat => {
     let sector = null;
@@ -96,7 +121,6 @@ function buildCombinedSectorFilters() {
 }
 
 function toggleSectorGroup(sectorId, event) {
-  // Prevent checkbox toggle when clicking arrow
   if (event) event.stopPropagation();
   
   const group = document.getElementById(`group-${sectorId}`);
@@ -112,10 +136,8 @@ function toggleSectorGroup(sectorId, event) {
 }
 
 function toggleSectorWithSubs(sector, sectorId, checked) {
-  // Update sector filter
   filters.sectors[sector] = checked;
-  
-  // Update all subcategories under this sector
+
   const group = document.getElementById(`group-${sectorId}`);
   if (group) {
     const subCheckboxes = group.querySelectorAll('input[type="checkbox"]');
@@ -137,8 +159,7 @@ function toggleSubcategoryInSector(subcat, sector) {
   
   const cb = document.querySelector(`input[data-key="${CSS.escape(subcat)}"]`);
   if (cb) cb.checked = filters.subcategories[subcat];
-  
-  // Check if all subcategories in this sector are checked/unchecked
+
   updateSectorCheckbox(sector);
   syncSelectAllSectorsState();
   updateVisibility();
@@ -156,24 +177,20 @@ function updateSectorCheckbox(sector) {
     
     sectorCheckbox.checked = allChecked;
     sectorCheckbox.indeterminate = !allChecked && !noneChecked;
-    
-    // Update sector filter state
+
     filters.sectors[sector] = allChecked || !noneChecked;
   }
 }
 
 function toggleAllSectorsAndSubs(checked) {
-  // Update all sectors
   Object.keys(filters.sectors).forEach(s => {
     filters.sectors[s] = checked;
   });
   
-  // Update all subcategories
   Object.keys(filters.subcategories).forEach(s => {
     filters.subcategories[s] = checked;
   });
   
-  // Update all checkboxes in UI
   const container = document.getElementById('sectorFilters');
   if (container) {
     const allCheckboxes = container.querySelectorAll('input[type="checkbox"]');
@@ -211,25 +228,6 @@ function buildLegend() {
   document.getElementById('legendContent').innerHTML = html;
 }
 
-function addAggregationToggle() {
-  const panel = document.querySelector('.panel-content');
-
-  const section = document.createElement('div');
-  section.className = 'section';
-  section.innerHTML = `
-    <div class="section-title">🧩 Aggregation Mode</div>
-    <label class="checkbox-item">
-      <input type="checkbox" id="aggregateToggle" checked>
-      <span>Enable aggregated pie view (3+ facilities / 50 km)</span>
-    </label>
-  `;
-  panel.insertBefore(section, panel.querySelector('.download-btn'));
-
-  document
-    .getElementById('aggregateToggle')
-    .addEventListener('change', e => setAggregationMode(e.target.checked));
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("toggleViewBtn");
   const mapDiv = document.getElementById("map");
@@ -241,14 +239,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const isMapVisible = mapDiv.style.display !== "none";
 
     if (isMapVisible) {
-      // Hide map, show table
       mapDiv.style.display = "none";
       controlPanel.style.display = "none";
       legend.style.display = "none";
       tableDiv.classList.remove("hidden");
       btn.textContent = "🗺️ Map View";
     } else {
-      // Show map, hide table
       mapDiv.style.display = "block";
       controlPanel.style.display = "block";
       legend.style.display = "block";

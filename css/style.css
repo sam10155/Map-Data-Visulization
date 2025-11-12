@@ -1,7 +1,9 @@
+/* === Base === */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
 #map { height: 100vh; width: 100%; }
 
+/* === Control Panel === */
 .control-panel {
   position: absolute;
   top: 10px; left: 10px;
@@ -28,58 +30,74 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
   max-height: calc(90vh - 50px);
 }
 
+.collapsed .panel-content { display: none; }
+
 .stats-box {
   background: #eff6ff;
-  padding: 12px; border-radius: 6px;
-  margin-bottom: 16px; font-size: 14px;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
 }
 
 .section { margin-bottom: 20px; }
-.section-title { font-weight: 600; font-size: 14px; margin-bottom: 8px; color: #374151; }
-
-.checkbox-item {
-  display: flex; align-items: center; gap: 8px;
-  padding: 4px 0; font-size: 13px; cursor: pointer;
-}
-.checkbox-item:hover { background: #f9fafb; }
-
-.color-dot {
-  width: 12px; height: 12px;
-  border-radius: 50%; border: 1px solid rgba(0,0,0,0.2);
-  flex-shrink: 0;
-}
-
-.download-btn {
-  width: 100%; background: #2563eb; color: white;
-  border: none; padding: 10px; border-radius: 6px;
-  font-size: 14px; cursor: pointer; font-weight: 500;
-}
-.download-btn:hover { background: #1d4ed8; }
-
-.legend {
-  position: absolute; bottom: 20px; right: 20px;
-  background: white; padding: 12px; border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  font-size: 12px; z-index: 1000;
-}
-.legend-title { font-weight: 600; margin-bottom: 8px; }
-.legend-item { display: flex; align-items: center; gap: 6px; margin: 4px 0; }
-
-.collapsed .panel-content { display: none; }
-
-.pie-icon {
-  border-radius: 50%;
-  background: rgba(255,255,255,0.8);
-  box-shadow: 0 0 5px rgba(0,0,0,0.3);
-}
-
 .section-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #374151;
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-/* Aggregation Slider Styles */
+/* === Checkbox Items === */
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 13px;
+  cursor: pointer;
+}
+.checkbox-item:hover { background: #f9fafb; }
+
+.color-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+
+/* === Buttons === */
+.download-btn {
+  width: 100%;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.download-btn:hover { background: #1d4ed8; }
+
+/* === Legend === */
+.legend {
+  position: absolute;
+  bottom: 20px; right: 20px;
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font-size: 12px;
+  z-index: 1000;
+}
+.legend-title { font-weight: 600; margin-bottom: 8px; }
+.legend-item { display: flex; align-items: center; gap: 6px; margin: 4px 0; }
+
+/* === Aggregation & Metric Sliders === */
 .aggregation-slider {
   display: flex;
   background: #e5e7eb;
@@ -103,25 +121,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
   position: relative;
   z-index: 1;
 }
-
-.agg-option:hover {
-  color: #374151;
-}
-
+.agg-option:hover { color: #374151; }
 .agg-option.active {
   background: white;
   color: #2563eb;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+.agg-option:active { transform: scale(0.98); }
 
-.agg-option:active {
-  transform: scale(0.98);
-}
-
-/* Hierarchical Subcategory Styles */
-.sector-group {
-  margin-bottom: 8px;
-}
+/* === Hierarchical Sector / Subcategory === */
+.sector-group { margin-bottom: 8px; }
 
 .sector-header {
   font-weight: 600;
@@ -132,23 +141,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
   display: flex;
   align-items: center;
   gap: 8px;
-  cursor: default;
-}
-
-.sector-header:hover {
-  background: #f3f4f6;
-}
-
-.sector-header input[type="checkbox"] {
   cursor: pointer;
 }
+.sector-header:hover { background: #f3f4f6; }
 
 .expand-icon {
   display: inline-block;
   width: 16px;
   font-size: 10px;
   transition: transform 0.2s;
-  cursor: pointer;
   flex-shrink: 0;
 }
 
@@ -158,49 +159,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
   border-left: 2px solid #e5e7eb;
   margin-top: 4px;
 }
+.subcat-item { padding-left: 4px; font-size: 12px; }
 
-.subcat-item {
-  padding-left: 4px;
-  font-size: 12px;
+/* === Pie Icon === */
+.pie-icon {
+  border-radius: 50%;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
-/* Hierarchical Subcategory Styles */
-.sector-group {
-  margin-bottom: 8px;
-}
-
-.sector-header {
-  font-weight: 600;
-  background: #f9fafb;
-  padding: 6px 4px;
-  margin: 0;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.sector-header:hover {
-  background: #f3f4f6;
-}
-
-.expand-icon {
-  display: inline-block;
-  width: 16px;
-  font-size: 10px;
-  transition: transform 0.2s;
-}
-
-.subcategory-group {
-  margin-left: 20px;
-  padding-left: 8px;
-  border-left: 2px solid #e5e7eb;
-  margin-top: 4px;
-}
-
-.subcat-item {
-  padding-left: 4px;
-  font-size: 12px;
-}
-
+/* === Map / Table Toggle === */
 #viewToggle {
   position: absolute;
   bottom: 25px;
@@ -219,17 +187,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   transition: all 0.15s ease;
 }
-
 #toggleViewBtn:hover {
   background: #f3f4f6;
   transform: translateY(-1px);
 }
 
+/* === Table View === */
 #tableView.hidden { display: none; }
 #tableView {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100%;
   height: 100vh;
   background: #fafafa;
@@ -276,9 +243,5 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
   text-decoration: none;
   font-weight: 500;
 }
-.coord-link:hover {
-  text-decoration: underline;
-}
-.coord-link:visited {
-  color: #2563eb;
-}
+.coord-link:hover { text-decoration: underline; }
+.coord-link:visited { color: #2563eb; }

@@ -8,7 +8,6 @@
 </head>
 <body>
   <div id="map"></div>
-
   <div id="controlPanel" class="control-panel">
     <div class="panel-header" onclick="togglePanel()">
       <span>🗺️ Layer Controls</span>
@@ -30,7 +29,6 @@
       <button class="download-btn" onclick="downloadCSV()">⬇️ Download Visible Facilities</button>
     </div>
   </div>
-
   <div id="viewToggle">
     <button id="toggleViewBtn">📊 Table View</button>
   </div>
@@ -40,7 +38,6 @@
     <div style="font-size: 11px; color: #6b7280; margin-bottom: 8px;">Circle size = capacity</div>
     <div id="legendContent"></div>
   </div>
-
   <div id="tableView" class="hidden">
     <div id="tableControls">
       <label>Province:</label>
@@ -57,17 +54,17 @@
       <tbody></tbody>
     </table>
   </div>
-
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="data/canada-data.js"></script>
   <script src="js/constants.js"></script>
+  <script src="js/metrics.js"></script>
   <script src="js/map.js"></script>
   <script src="js/tableview.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/aggregate.js"></script>
   <script src="js/download.js"></script>
   <script src="js/search.js"></script>
-  <script src="js/aggregate.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

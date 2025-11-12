@@ -135,22 +135,34 @@ function createPieSVG(sectorCounts, size = 70, overrideColor = null) {
 
   const r = size / 2;
   const entries = Object.entries(sectorCounts).filter(([, c]) => c > 0);
-  const keys = entries.map(e => e[0]);
   const fontSize = Math.max(10, Math.min(size * 0.25, 20));
 
-  // --- Single-type (or effectively single) -> solid circle ring ---
+  const metric = window.currentMetric || 'facilities';
+  let centerText;
+  
+  if (metric === 'workers') {
+    if (total >= 10000) centerText = Math.round(total / 1000) + 'k';
+    else if (total >= 1000) centerText = (total / 1000).toFixed(1) + 'k';
+    else centerText = Math.round(total).toString();
+  } else if (metric === 'capacities') {
+    if (total >= 1000) centerText = (total / 1000).toFixed(1) + 'k';
+    else if (total < 10) centerText = total.toFixed(1);
+    else centerText = Math.round(total).toString();
+  } else {
+    centerText = Math.round(total).toString();
+  }
+
   if (overrideColor) {
     let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="pointer-events: all;">`;
     svg += `<circle cx="${r}" cy="${r}" r="${r}" fill="${overrideColor}" stroke="white" stroke-width="1.5" />`;
     svg += `<circle cx="${r}" cy="${r}" r="${r * 0.35}" fill="white" stroke="#444" stroke-width="1.5"/>`;
     svg += `<text x="${r}" y="${r}" text-anchor="middle" dominant-baseline="middle"
                   font-size="${fontSize}" font-weight="bold" fill="#333"
-                  style="pointer-events: none; user-select: none;">${total}</text>`;
+                  style="pointer-events: none; user-select: none;">${centerText}</text>`;
     svg += `</svg>`;
     return svg;
   }
 
-  // --- Multi-sector path-based pie ---
   let cumulative = 0;
   let sliceId = 0;
   let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="pointer-events: all;">`;
@@ -179,7 +191,7 @@ function createPieSVG(sectorCounts, size = 70, overrideColor = null) {
   svg += `<circle cx="${r}" cy="${r}" r="${r * 0.35}" fill="white" stroke="#444" stroke-width="1.5"/>`;
   svg += `<text x="${r}" y="${r}" text-anchor="middle" dominant-baseline="middle"
                 font-size="${fontSize}" font-weight="bold" fill="#333"
-                style="pointer-events: none; user-select: none;">${total}</text>`;
+                style="pointer-events: none; user-select: none;">${centerText}</text>`;
   svg += `</svg>`;
   return svg;
 }
@@ -209,8 +221,9 @@ function showSliceTooltip(event, sector, count, percent) {
     document.body.appendChild(aggregationPieTooltip);
   }
   
-  const facility = count === 1 ? 'facility' : 'facilities';
-  aggregationPieTooltip.innerHTML = `<strong>${sector}</strong><br>${count} ${facility} (${percent})`;
+  const metric = window.currentMetric || 'facilities';
+  const displayValue = window.formatMetricValue ? window.formatMetricValue(count, metric) : count;
+  aggregationPieTooltip.innerHTML = `<strong>${sector}</strong><br>${displayValue} (${percent})`;
   aggregationPieTooltip.style.display = 'block';
   aggregationPieTooltip.style.left = (event.clientX + 10) + 'px';
   aggregationPieTooltip.style.top = (event.clientY + 10) + 'px';
@@ -222,18 +235,38 @@ function hideSliceTooltip() {
   }
 }
 
+function formatLargeNumber(value) {
+  if (!isFinite(value)) return '0';
+  const abs = Math.abs(value);
+  const clean = Math.round((+value + Number.EPSILON) * 1000) / 1000;
+
+  const fmt1 = (n) => {
+    const s = (Math.round(n * 10) / 10).toFixed(1);
+    return s.replace(/\.0$/, '');
+  };
+
+  if (abs >= 1_000_000) {
+    return fmt1(clean / 1_000_000) + 'M';
+  } else if (abs >= 1_000) {
+    return fmt1(clean / 1_000) + 'k';
+  } else {
+    return Math.round(clean).toString();
+  }
+}
+
 function drawAggregatedPies(clusters, labelKey = null) {
   clearSpatialPies();
 
   clusters.forEach(c => {
-    // Build sector counts and also track subcategories for single-type detection
+    const metric = window.currentMetric || 'facilities';
     const sectorCounts = {};
     const sectorSet = new Set();
     const subcatSet = new Set();
 
     c.members.forEach(f => {
       const sector = (f.sector || '').trim();
-      sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
+      const value = window.calculateMetricValue ? window.calculateMetricValue(f, metric) : 1;
+      sectorCounts[sector] = (sectorCounts[sector] || 0) + value;
       sectorSet.add(sector);
       subcatSet.add((f.subcategory || '').trim());
     });
@@ -243,17 +276,14 @@ function drawAggregatedPies(clusters, labelKey = null) {
     const dominant = entries.length ? entries[0] : null;
     const dominantRatio = dominant ? dominant[1] / Math.max(1, total) : 0;
 
-    // Decide an override color when it's effectively a single type
     let overrideColor = null;
     if (entries.length === 1 || dominantRatio >= 0.999) {
-      // Prefer subcategory color if there is exactly one subcategory
       if (subcatSet.size === 1) {
         const subcat = Array.from(subcatSet)[0];
         overrideColor =
           (window.SUBCATEGORY_COLORS && window.SUBCATEGORY_COLORS[subcat]) ||
           (typeof SUBCATEGORY_COLORS !== 'undefined' ? SUBCATEGORY_COLORS[subcat] : null);
       }
-      // Fallback to sector color
       if (!overrideColor && dominant) {
         const sector = dominant[0];
         overrideColor =
@@ -273,17 +303,21 @@ function drawAggregatedPies(clusters, labelKey = null) {
       iconAnchor: [size / 2, size / 2],
     });
 
-    // Tooltip
     let tooltipHtml = `<div style="font-size: 13px;">`;
     if (c.name) tooltipHtml += `<strong>${c.name}</strong><br>`;
-    tooltipHtml += `<strong>${c.members.length} facilities</strong><br><br>`;
+    tooltipHtml += `<strong>${c.members.length} facilities</strong><br>`;
+    
+    const metricLabel = window.getMetricLabel ? window.getMetricLabel(metric) : 'Count';
+    tooltipHtml += `<em>By ${metricLabel}</em><br><br>`;
+    
     entries.forEach(([sector, count]) => {
       const percent = ((count / Math.max(1, total)) * 100).toFixed(1);
       const color =
         (window.SECTOR_COLORS && window.SECTOR_COLORS[sector]) ||
         (typeof SECTOR_COLORS !== 'undefined' ? SECTOR_COLORS[sector] : null) ||
         '#888';
-      tooltipHtml += `<span style="display:inline-block;width:10px;height:10px;background:${color};margin-right:5px;"></span>${sector}: ${count} (${percent}%)<br>`;
+      const displayValue = window.formatMetricValue ? window.formatMetricValue(count, metric) : count;
+      tooltipHtml += `<span style="display:inline-block;width:10px;height:10px;background:${color};margin-right:5px;"></span>${sector}: ${displayValue} (${percent}%)<br>`;
     });
     tooltipHtml += `</div>`;
 
@@ -338,22 +372,37 @@ function applyAggregation() {
 
 function setAggregationMode(mode) {
   aggregationMode = mode;
+  window.aggregationMode = mode;
+
+  const metricSection = document.getElementById('metric-section');
+  if (metricSection) {
+    if (mode === 'none') {
+      metricSection.style.display = 'none';
+      metricSection.style.visibility = 'hidden';
+      metricSection.style.opacity = '0';
+    } else {
+      metricSection.style.display = 'block';
+      metricSection.style.visibility = 'visible';
+      metricSection.style.opacity = '1';
+    }
+  } else {
+    console.warn('[setAggregationMode] metric-section not found at call time');
+  }
+
   applyAggregation();
-  
+
   const options = ['none', '50km', 'provinces', 'regions'];
   options.forEach(opt => {
     const btn = document.getElementById(`agg-${opt}`);
-    if (btn) {
-      if (opt === mode) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
-      }
-    }
+    if (btn) btn.classList.toggle('active', opt === mode);
   });
 }
 
+window.attachAggregationEvents = attachAggregationEvents;
+
 function attachAggregationEvents() {
+  if (!window.map) return;
+
   map.on('zoomend', () => {
     const zoom = map.getZoom();
 
@@ -369,12 +418,6 @@ function attachAggregationEvents() {
       updateVisibility();
     }
   });
-}
-
-if (typeof window !== 'undefined') {
-  window.showSliceTooltip = showSliceTooltip;
-  window.hideSliceTooltip = hideSliceTooltip;
-  window.setAggregationMode = setAggregationMode;
 }
 
 function haversine(lat1, lon1, lat2, lon2) {
@@ -473,58 +516,44 @@ function createPieSVG(sectorCounts, size = 70) {
   const total = Object.values(sectorCounts).reduce((a, b) => a + b, 0);
   if (total === 0) return '';
 
-  let cumulative = 0;
   const r = size / 2;
+  let cumulative = 0;
   let sliceId = 0;
-  
+  const entries = Object.entries(sectorCounts);
+  const singleColor = entries.length === 1 ? (SECTOR_COLORS[entries[0][0]] || '#888') : null;
+
   let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="pointer-events: all;">`;
 
-  // Handle the single-sector case explicitly:
-  if (Object.keys(sectorCounts).length === 1) {
-    const sector = Object.keys(sectorCounts)[0];
-    const color = SECTOR_COLORS[sector] || '#888';
-    const percent = '100.0';
-    const r = size / 2;
-    const svg = `
-      <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="pointer-events: all;">
-        <path d="M${r},${r} m0,-${r} a${r},${r} 0 1,1 0,${2 * r} a${r},${r} 0 1,1 0,-${2 * r} Z"
-              fill="${color}" stroke="white" stroke-width="1.5"
-              style="cursor:pointer;transition:opacity 0.2s;"
-              onmouseover="this.style.opacity='0.8'; showSliceTooltip(event, '${sector.replace(/'/g, "\\'")}', ${total}, '${percent}%')"
-              onmouseout="this.style.opacity='1'; hideSliceTooltip()" />
-        <circle cx="${r}" cy="${r}" r="${r * 0.35}" fill="white" stroke="#444" stroke-width="1.5" />
-        <text x="${r}" y="${r}" text-anchor="middle" dominant-baseline="middle"
-              font-size="${Math.max(10, Math.min(size * 0.25, 20))}" font-weight="bold" fill="#333"
-              style="pointer-events:none;user-select:none;">${total}</text>
-      </svg>`;
-    return svg;
+  if (entries.length === 1) {
+    svg += `<circle cx="${r}" cy="${r}" r="${r}" fill="${singleColor}" stroke="white" stroke-width="1.5" />`;
+  } else {
+    for (const [sector, count] of entries) {
+      const portion = count / total;
+      const [sx, sy] = polar(r, r, r, cumulative * 360);
+      cumulative += portion;
+      const [ex, ey] = polar(r, r, r, cumulative * 360);
+      const large = portion > 0.5 ? 1 : 0;
+      const color = SECTOR_COLORS[sector] || '#888';
+      const percent = (portion * 100).toFixed(1);
+
+      svg += `<path id="slice-${sliceId}" d="M${r},${r} L${sx},${sy} A${r},${r} 0 ${large},1 ${ex},${ey} Z"
+                fill="${color}" stroke="white" stroke-width="1.5"
+                style="cursor:pointer;transition:opacity 0.2s;"
+                onmouseover="this.style.opacity='0.8'; showSliceTooltip(event, '${sector.replace(/'/g, "\\'")}', ${count}, '${percent}%')"
+                onmouseout="this.style.opacity='1'; hideSliceTooltip()" />`;
+      sliceId++;
+    }
   }
-  
-  for (const [sector, count] of Object.entries(sectorCounts)) {
-    const portion = count / total;
-    const [sx, sy] = polar(r, r, r, cumulative * 360);
-    cumulative += portion;
-    const [ex, ey] = polar(r, r, r, cumulative * 360);
-    const large = portion > 0.5 ? 1 : 0;
-    const color = SECTOR_COLORS[sector] || '#888';
-    const percent = (portion * 100).toFixed(1);
-    
-    svg += `<path id="slice-${sliceId}" d="M${r},${r} L${sx},${sy} A${r},${r} 0 ${large},1 ${ex},${ey} Z"
-              fill="${color}" stroke="white" stroke-width="1.5" 
-              style="cursor: pointer; transition: opacity 0.2s;"
-              onmouseover="this.style.opacity='0.8'; showSliceTooltip(event, '${sector.replace(/'/g, "\\'")}', ${count}, '${percent}%')"
-              onmouseout="this.style.opacity='1'; hideSliceTooltip()"
-              />`;
-    sliceId++;
-  }
-  
-  svg += `<circle cx="${r}" cy="${r}" r="${r * 0.35}" fill="white" stroke="#444" stroke-width="1.5"/>`;
-  
-  const fontSize = Math.max(10, Math.min(size * 0.25, 20));
-  svg += `<text x="${r}" y="${r}" text-anchor="middle" dominant-baseline="middle" 
-                font-size="${fontSize}" font-weight="bold" fill="#333" 
-                style="pointer-events: none; user-select: none;">${total}</text>`;
+
+  svg += `<circle cx="${r}" cy="${r}" r="${r * 0.5}" fill="white" stroke="#444" stroke-width="1.5"/>`;
+  const fontSize = Math.max(11, Math.min(size * 0.25, 22));
+  const centerText = formatLargeNumber(total);
+
+  svg += `<text x="${r}" y="${r}" text-anchor="middle" dominant-baseline="middle"
+                font-size="${fontSize}" font-weight="bold" fill="#333"
+                style="pointer-events:none;user-select:none;">${centerText}</text>`;
   svg += `</svg>`;
+
   return svg;
 }
 
@@ -553,8 +582,9 @@ function showSliceTooltip(event, sector, count, percent) {
     document.body.appendChild(pieTooltip);
   }
   
-  const facility = count === 1 ? 'facility' : 'facilities';
-  pieTooltip.innerHTML = `<strong>${sector}</strong><br>${count} ${facility} (${percent})`;
+  const metric = window.currentMetric || 'facilities';
+  const displayValue = window.formatMetricValue ? window.formatMetricValue(count, metric) : (count === 1 ? '1 facility' : `${count} facilities`);
+  pieTooltip.innerHTML = `<strong>${sector}</strong><br>${displayValue} (${percent})`;
   pieTooltip.style.display = 'block';
   pieTooltip.style.left = (event.clientX + 10) + 'px';
   pieTooltip.style.top = (event.clientY + 10) + 'px';
@@ -570,14 +600,37 @@ function drawAggregatedPies(clusters, labelKey = null) {
   clearSpatialPies();
 
   clusters.forEach(c => {
-    const sectorCounts = {};
-    c.members.forEach(f => {
-      const s = f.sector;
-      sectorCounts[s] = (sectorCounts[s] || 0) + 1;
-    });
+
+    const sectorCounts = computeMetricCounts(c.members, currentMetric);
+
+    const total = Object.values(sectorCounts).reduce((a, b) => a + b, 0);
+    const entries = Object.entries(sectorCounts).sort((a, b) => b[1] - a[1]);
+
+
+    const subcatSet = new Set(c.members.map(f => (f.subcategory || '').trim()));
+    const dominant = entries.length ? entries[0] : null;
+    const dominantRatio = dominant ? dominant[1] / Math.max(1, total) : 0;
+    let overrideColor = null;
+
+    if (entries.length === 1 || dominantRatio >= 0.999) {
+      if (subcatSet.size === 1) {
+        const subcat = Array.from(subcatSet)[0];
+        overrideColor =
+          (window.SUBCATEGORY_COLORS && window.SUBCATEGORY_COLORS[subcat]) ||
+          (typeof SUBCATEGORY_COLORS !== 'undefined' ? SUBCATEGORY_COLORS[subcat] : null);
+      }
+      if (!overrideColor && dominant) {
+        const sector = dominant[0];
+        overrideColor =
+          (window.SECTOR_COLORS && window.SECTOR_COLORS[sector]) ||
+          (typeof SECTOR_COLORS !== 'undefined' ? SECTOR_COLORS[sector] : null) ||
+          '#888';
+      }
+    }
 
     const size = Math.min(50 + c.members.length * 2, 120);
-    const svg = createPieSVG(sectorCounts, size);
+    const svg = createPieSVG(sectorCounts, size, overrideColor);
+
     const icon = L.divIcon({
       html: svg,
       className: 'pie-icon',
@@ -586,21 +639,26 @@ function drawAggregatedPies(clusters, labelKey = null) {
     });
 
     let tooltipHtml = `<div style="font-size: 13px;">`;
-    if (c.name) {
-      tooltipHtml += `<strong>${c.name}</strong><br>`;
-    }
-    tooltipHtml += `<strong>${c.members.length} facilities</strong><br><br>`;
-    Object.entries(sectorCounts).sort((a, b) => b[1] - a[1]).forEach(([sector, count]) => {
-      const percent = ((count / c.members.length) * 100).toFixed(1);
-      const color = SECTOR_COLORS[sector] || '#888';
-      tooltipHtml += `<span style="display:inline-block;width:10px;height:10px;background:${color};margin-right:5px;"></span>${sector}: ${count} (${percent}%)<br>`;
+    if (c.name) tooltipHtml += `<strong>${c.name}</strong><br>`;
+
+    const metricLabel = getMetricLabel(currentMetric);
+    tooltipHtml += `<strong>${formatMetricValue(total, currentMetric)}</strong><br><em>${metricLabel}</em><br><br>`;
+
+    entries.forEach(([sector, value]) => {
+      const percent = ((value / Math.max(1, total)) * 100).toFixed(1);
+      const color =
+        (window.SECTOR_COLORS && window.SECTOR_COLORS[sector]) ||
+        (typeof SECTOR_COLORS !== 'undefined' ? SECTOR_COLORS[sector] : null) ||
+        '#888';
+      tooltipHtml += `<span style="display:inline-block;width:10px;height:10px;background:${color};margin-right:5px;"></span>
+        ${sector}: ${formatMetricValue(value, currentMetric)} (${percent}%)<br>`;
     });
-    tooltipHtml += '</div>';
+    tooltipHtml += `</div>`;
 
     const m = L.marker([c.lat, c.lon], { icon }).bindTooltip(tooltipHtml, {
       permanent: false,
       direction: 'top',
-      offset: [0, -size/2]
+      offset: [0, -size / 2],
     });
     m.addTo(map);
     clusterMarkers.push(m);
@@ -614,74 +672,40 @@ function clearSpatialPies() {
 
 function applyAggregation() {
   clearSpatialPies();
-  
+
   if (aggregationMode === 'none') {
     updateVisibility();
     return;
   }
 
-  // Hide individual markers
   Object.values(markers).forEach(items =>
     items.forEach(({ marker }) => {
-      if (map.hasLayer(marker)) {
-        map.removeLayer(marker);
-      }
+      if (map.hasLayer(marker)) map.removeLayer(marker);
     })
   );
 
   let clusters = [];
-  
-  switch(aggregationMode) {
+  switch (aggregationMode) {
     case '50km':
       clusters = computeSpatialClusters();
-      drawAggregatedPies(clusters);
-      break;
-    case 'regions':
-      clusters = computeRegionClusters();
-      drawAggregatedPies(clusters);
       break;
     case 'provinces':
       clusters = computeProvinceClusters();
-      drawAggregatedPies(clusters);
+      break;
+    case 'regions':
+      clusters = computeRegionClusters();
       break;
   }
-}
 
-function setAggregationMode(mode) {
-  aggregationMode = mode;
-  applyAggregation();
-  
-  // Update UI slider
-  const options = ['none', '50km', 'regions', 'provinces'];
-  options.forEach(opt => {
-    const btn = document.getElementById(`agg-${opt}`);
-    if (btn) {
-      if (opt === mode) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
-      }
-    }
-  });
-}
-
-function attachAggregationEvents() {
-  // Zoom changes only affect 50km mode
-  map.on('zoomend', () => {
-    if (aggregationMode === '50km') {
-      const zoom = map.getZoom();
-      if (zoom > PIE_ZOOM_THRESHOLD) {
-        clearSpatialPies();
-        updateVisibility();
-      } else {
-        applyAggregation();
-      }
-    }
-  });
+  drawAggregatedPies(clusters);
 }
 
 if (typeof window !== 'undefined') {
   const _originalUpdateVisibility = window.updateVisibility;
+  window.currentMetric = window.currentMetric || 'facilities';
+  window.showSliceTooltip = showSliceTooltip;
+  window.hideSliceTooltip = hideSliceTooltip;
+  window.setAggregationMode = setAggregationMode;
   window.updateVisibility = function () {
     if (
       aggregationMode !== 'none' &&

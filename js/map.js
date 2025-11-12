@@ -30,18 +30,18 @@ function loadData() {
   });
 
   initializeFilters();
-  buildUI();
   addAggregationSlider();
+  buildUI();
   updateVisibility();
 }
 
 function addAggregationSlider() {
   const searchBox = document.querySelector('.stats-box');
-  const sliderSection = document.createElement('div');
-  sliderSection.className = 'section';
-  sliderSection.style.marginTop = '8px';
+  const aggSection = document.createElement('div');
+  aggSection.className = 'section';
+  aggSection.style.marginTop = '8px';
   
-  sliderSection.innerHTML = `
+  aggSection.innerHTML = `
     <div class="section-title">🧩 Aggregation Mode</div>
     <div class="aggregation-slider">
       <button id="agg-none" class="agg-option active" onclick="setAggregationMode('none')">None</button>
@@ -51,7 +51,7 @@ function addAggregationSlider() {
     </div>
   `;
   
-  searchBox.insertAdjacentElement('afterend', sliderSection);
+  searchBox.insertAdjacentElement('afterend', aggSection);
 }
 
 function calculateRadius(f) {
