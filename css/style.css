@@ -245,3 +245,207 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
 }
 .coord-link:hover { text-decoration: underline; }
 .coord-link:visited { color: #2563eb; }
+
+/* === Edit Mode Styles === */
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.edit-toggle-btn {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.edit-toggle-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.edit-toggle-btn.edit-active {
+  background: #ef4444;
+  border-color: #dc2626;
+  color: white;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+  animation: pulse-edit 2s infinite;
+}
+
+.edit-toggle-btn.edit-active:hover {
+  background: #dc2626;
+}
+
+@keyframes pulse-edit {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2); }
+  50% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.1); }
+}
+
+.coord-display {
+  color: #6b7280;
+  font-size: 10px;
+  font-family: monospace;
+}
+
+.save-notification {
+  position: fixed;
+  top: 90px;
+  right: 20px;
+  background: #10b981;
+  color: white;
+  padding: 16px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 10000;
+  font-size: 13px;
+  line-height: 1.5;
+  max-width: 320px;
+  animation: slideIn 0.3s ease;
+}
+
+.save-notification.fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+.toast-container {
+  position: fixed;
+  top: 90px; 
+  right: 20px;
+  width: 320px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; 
+}
+
+.toast-container .save-notification {
+  position: relative;
+  top: 0;
+  right: 0;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateX(400px);
+  }
+}
+
+.facility-popup {
+  min-width: 200px;
+}
+
+.edit-revert-btn,
+.edit-delete-btn {
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  transition: 0.2s;
+  font-weight: 500;
+}
+
+.edit-revert-btn:hover {
+  background: #f3f4f6;
+}
+
+.edit-delete-btn {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+.edit-delete-btn:hover {
+  background: #fee2e2;
+}
+
+.reset-edits-btn {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  padding: 8px 14px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+}
+
+.reset-edits-btn.hidden {
+  display: none;
+}
+
+/* Modal background */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(2px);
+  z-index: 9998;
+}
+
+/* Modal window */
+.modal-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px 25px;
+  border-radius: 10px;
+  z-index: 9999;
+  width: 320px;
+  text-align: center;
+  font-size: 15px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+}
+
+.modal-buttons {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.modal-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.modal-confirm {
+  background: #ef4444;
+  color: white;
+}
+
+.modal-cancel {
+  background: #e5e7eb;
+  color: #111;
+}
