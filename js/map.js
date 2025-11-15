@@ -63,8 +63,25 @@ async function loadData() {
       f._originalCoords = { originalLat: f.lat, originalLon: f.lon };
     }
 
+    if (!f._originalAttrs) {
+      f._originalAttrs = {
+        name: f.name,
+        operator: f.operator,
+        city: f.city,
+        province: f.province,
+        sector: f.sector,
+        subcategory: f.subcategory,
+        capacity: f.capacity,
+        unit: f.unit
+      };
+    }
+
     if (typeof applyPositionOverride === 'function') {
       applyPositionOverride(f);
+    }
+
+    if (typeof applyAttributeOverride === 'function') {
+      applyAttributeOverride(f);
     }
 
     const delKey = `delete:${sanitizeStorageKey(f.name)}`;
@@ -135,7 +152,6 @@ function calculateRadius(f) {
 
   return radius;
 }
-
 
 function createPopup(f) {
   if (typeof createEditablePopup === 'function') {

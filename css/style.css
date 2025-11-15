@@ -354,6 +354,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
 
 .facility-popup {
   min-width: 200px;
+  max-width: 350px;
 }
 
 .edit-revert-btn,
@@ -398,6 +399,19 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
 
 .reset-edits-btn.hidden {
   display: none;
+}
+
+/* === Attribute Edit Form === */
+.attribute-edit-form input,
+.attribute-edit-form select {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.attribute-edit-form input:focus,
+.attribute-edit-form select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
 }
 
 /* Modal background */
