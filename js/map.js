@@ -67,7 +67,7 @@ async function loadData() {
       applyPositionOverride(f);
     }
 
-    const delKey = `delete:${f.name}`;
+    const delKey = `delete:${sanitizeStorageKey(f.name)}`;
     if (window._deleteCache && window._deleteCache[delKey]) return;
     
     const color = SUBCATEGORY_COLORS[f.subcategory] || SECTOR_COLORS[f.sector] || '#555';
@@ -96,16 +96,6 @@ async function loadData() {
   addAggregationSlider();
   buildUI();
   updateVisibility();
-}
-
-function addResetLocalEditsButton() {
-  const btn = document.createElement('button');
-  btn.id = 'resetEditsBtn';
-  btn.className = 'reset-edits-btn hidden';
-  btn.textContent = '↺ Reset Edits';
-  btn.onclick = showResetConfirmationModal;
-
-  document.body.appendChild(btn);
 }
 
 function addAggregationSlider() {

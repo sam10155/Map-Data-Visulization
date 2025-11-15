@@ -9,7 +9,13 @@ let editingFacility = null;
 let isDragging = false;
 let dragHandlers = null;
 
-// Load position overrides on startup
+function sanitizeStorageKey(str) {
+  return str
+    .replace(/[\s\/\\'"]/g, '-')
+    .replace(/[^a-zA-Z0-9\-:]/g, '')
+    .substring(0, 180);
+}
+
 async function loadPositionOverrides() {
   try {
     const result = await window.storage.list('marker-pos:');
@@ -28,10 +34,10 @@ async function loadPositionOverrides() {
 }
 
 function applyPositionOverride(facility) {
-  const key = `marker-pos:${facility.name}`;
+  const safeKey = `marker-pos:${sanitizeStorageKey(facility.name)}`;
 
-  if (window._positionCache[key]) {
-    const override = window._positionCache[key];
+  if (window._positionCache[safeKey]) {
+    const override = window._positionCache[safeKey];
     facility.lat = override.lat;
     facility.lon = override.lon;
     return true;
@@ -41,7 +47,7 @@ function applyPositionOverride(facility) {
 }
 
 async function savePositionOverride(facility) {
-  const key = `marker-pos:${facility.name}`;
+  const safeKey = `marker-pos:${sanitizeStorageKey(facility.name)}`;
   const data = {
     name: facility.name,
     operator: facility.operator,
@@ -53,10 +59,10 @@ async function savePositionOverride(facility) {
   };
   
   try {
-    await window.storage.set(key, JSON.stringify(data));
+    await window.storage.set(safeKey, JSON.stringify(data));
     
     if (!window._positionCache) window._positionCache = {};
-    window._positionCache[key] = data;
+    window._positionCache[safeKey] = data;
 
     showResetButton();
     
@@ -118,14 +124,14 @@ async function initPositionCache() {
 async function revertMarkerPosition() {
   if (!editingMarker || !editingFacility) return;
 
-  const key = `marker-pos:${editingFacility.name}`;
+  const safeKey = `marker-pos:${sanitizeStorageKey(editingFacility.name)}`;
 
   if (window.storage) {
-    await window.storage.set(key, null);
+    await window.storage.delete(safeKey);
   }
 
-  if (window._positionCache && window._positionCache[key]) {
-    delete window._positionCache[key];
+  if (window._positionCache && window._positionCache[safeKey]) {
+    delete window._positionCache[safeKey];
   }
 
   const { originalLat, originalLon } = editingFacility._originalCoords;
@@ -148,15 +154,15 @@ async function deleteMarker() {
 
   editingMarker._deleted = true;
 
-  const key = `delete:${editingFacility.name}`;
+  const safeKey = `delete:${sanitizeStorageKey(editingFacility.name)}`;
 
   try {
     if (window.storage) {
-      await window.storage.set(key, "1");
+      await window.storage.set(safeKey, "1");
     }
 
     if (!window._deleteCache) window._deleteCache = {};
-    window._deleteCache[key] = true;
+    window._deleteCache[safeKey] = true;
 
     map.removeLayer(editingMarker);
 
@@ -424,8 +430,8 @@ function createEditablePopup(facility) {
   const div = document.createElement('div');
   div.className = 'facility-popup';
   
-  const hasOverride = window._positionCache && 
-    window._positionCache[`marker-pos:${facility.name}`];
+  const safeKey = `marker-pos:${sanitizeStorageKey(facility.name)}`;
+  const hasOverride = window._positionCache && window._positionCache[safeKey];
   
   const content = `
     <div class="popup-header">
@@ -557,4 +563,8 @@ if (typeof window !== 'undefined') {
   window.toggleEditMode = toggleEditMode;
   window.applyPositionOverride = applyPositionOverride;
   window.initPositionCache = initPositionCache;
+  window.sanitizeStorageKey = sanitizeStorageKey;
+  window.revertMarkerPosition = revertMarkerPosition;
+  window.deleteMarker = deleteMarker;
+  window.showResetConfirmationModal = showResetConfirmationModal;
 }

@@ -44,10 +44,8 @@ function toggleAll(group, checked) {
   const target = filters[group];
   if (!target) return;
 
-  // Update model
   Object.keys(target).forEach(k => { target[k] = checked; });
 
-  // Update UI checkboxes
   const container = getContainer(group);
   const selectAll = getSelectAllEl(group);
   if (container && selectAll) {
@@ -74,17 +72,33 @@ function syncSelectAllState(group) {
   selectAll.indeterminate = !allChecked && !noneChecked;
 }
 
+function isMarkerDeleted(marker) {
+  if (marker._deleted) return true;
+  
+  if (marker._facility && window._deleteCache) {
+    const safeKey = `delete:${window.sanitizeStorageKey(marker._facility.name)}`;
+    return window._deleteCache[safeKey] === true;
+  }
+  
+  return false;
+}
+
 function updateVisibility() {
   let visible = 0;
 
   Object.entries(markers).forEach(([key, items]) => {
     items.forEach(({ marker, facility }) => {
-      // Use facility properties for hierarchical check
+      if (isMarkerDeleted(marker)) {
+        if (map.hasLayer(marker)) {
+          map.removeLayer(marker);
+        }
+        return;
+      }
+
       const datasetOn = filters.datasets[facility.dataset];
       const sectorOn = filters.sectors[facility.sector];
       const subOn = filters.subcategories[facility.subcategory];
       
-      // All three must be true
       const show = datasetOn && sectorOn && subOn;
 
       if (show) {
