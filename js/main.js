@@ -54,9 +54,9 @@ async function ensurePersistentStorage() {
   }
 
   if (window.storage) {
-    console.log("✓ Persistent storage initialized");
+    console.log("[+] Persistent storage initialized");
   } else {
-    console.warn("⚠ Persistent storage NOT available");
+    console.warn("[x] Persistent storage NOT available");
   }
 }
 

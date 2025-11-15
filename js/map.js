@@ -52,10 +52,40 @@ function addResetLocalEditsButton() {
 }
 
 async function loadData() {
-  const facilities = window.canadaIndustrialData ? window.canadaIndustrialData.all : [];
-  if (!facilities.length) {
+  const base = window.canadaIndustrialData ? window.canadaIndustrialData.all : [];
+  if (!base.length) {
     alert('No data loaded! Make sure canada-data.js is in /data/.');
     return;
+  }
+
+  const facilities = [...base];
+
+  if (window._attributeCache) {
+    Object.values(window._attributeCache).forEach(attr => {
+      if (attr && attr._isNew) {
+        const f = {
+          name: attr.name,
+          operator: attr.operator,
+          dataset: attr.dataset || "New",
+          sector: attr.sector,
+          subcategory: attr.subcategory,
+          province: attr.province,
+          city: attr.city,
+          lat: attr.lat,
+          lon: attr.lon,
+          capacity: attr.capacity,
+          unit: attr.unit,
+          _isNew: true,
+
+          _originalCoords: {
+            originalLat: attr.lat,
+            originalLon: attr.lon
+          },
+          _originalAttrs: { ...attr }
+        };
+        facilities.push(f);
+      }
+    });
   }
 
   facilities.forEach(f => {
@@ -132,6 +162,112 @@ function addAggregationSlider() {
   `;
   
   searchBox.insertAdjacentElement('afterend', aggSection);
+}
+
+function createNewFacility() {
+  if (!map) return;
+
+  const center = map.getCenter();
+  const lat = center.lat;
+  const lon = center.lng;
+
+  const province = typeof guessProvince === "function" ? guessProvince(lat, lon) : "";
+  const city = typeof guessNearestCity === "function" ? guessNearestCity(lat, lon) : "";
+
+  const facility = {
+    name: "",
+    operator: "",
+    dataset: "New",
+    sector: "",
+    subcategory: "",
+    province,
+    city,
+    lat,
+    lon,
+    capacity: "",
+    unit: "",
+    _isNew: true,
+    _originalCoords: { originalLat: lat, originalLon: lon },
+    _originalAttrs: {}
+  };
+
+  const color = "#2563eb";
+  const marker = L.circleMarker([lat, lon], {
+    radius: 10,
+    color,
+    fillColor: color,
+    fillOpacity: 0.7,
+    weight: 1
+  }).addTo(map);
+
+  marker._facility = facility;
+
+  const popupNode = createEditablePopup(facility);
+  marker._popupContent = popupNode;
+  marker.bindPopup(popupNode, { closeOnClick: false, autoClose: false });
+
+  if (typeof trackEditingMarker === "function") {
+    trackEditingMarker(marker, facility);
+  }
+
+  const key = `${facility.dataset}_${facility.sector}_${facility.subcategory}`;
+  if (!markers[key]) markers[key] = [];
+  markers[key].push({ marker, facility });
+
+  editingMarker = marker;
+  editingFacility = facility;
+
+  marker.openPopup();
+  map.panTo([lat, lon], { animate: true });
+
+  setTimeout(() => {
+    const editBtn = document.getElementById("attributeEditBtn");
+    if (!editBtn) return;
+
+    if (!attributeEditMode) {
+      toggleAttributeEditMode();
+    }
+  }, 80);
+}
+
+
+function guessProvince(lat, lon) {
+  const P = [
+    { name: "BC", minLat: 48, maxLat: 60, minLon: -139, maxLon: -114 },
+    { name: "AB", minLat: 49, maxLat: 60, minLon: -120, maxLon: -110 },
+    { name: "SK", minLat: 49, maxLat: 60, minLon: -110, maxLon: -101 },
+    { name: "MB", minLat: 49, maxLat: 60, minLon: -101, maxLon: -89 },
+    { name: "ON", minLat: 41.5, maxLat: 56, minLon: -95, maxLon: -74 },
+    { name: "QC", minLat: 44, maxLat: 62, minLon: -80, maxLon: -57 },
+    { name: "NB", minLat: 44, maxLat: 48.2, minLon: -68, maxLon: -63 },
+    { name: "NS", minLat: 43, maxLat: 47.5, minLon: -66.5, maxLon: -59.5 },
+    { name: "NL", minLat: 46, maxLat: 60, minLon: -60, maxLon: -52 },
+    { name: "PE", minLat: 45.8, maxLat: 47.2, minLon: -64.4, maxLon: -61.9 }
+  ];
+
+  for (const p of P) {
+    if (lat >= p.minLat && lat <= p.maxLat && lon >= p.minLon && lon <= p.maxLon) {
+      return p.name;
+    }
+  }
+  return "";
+}
+
+function guessNearestCity(lat, lon) {
+  const facilities = window.canadaIndustrialData ? window.canadaIndustrialData.all : [];
+  if (!facilities.length) return "";
+
+  let best = null;
+  let bestDist = Infinity;
+
+  for (const f of facilities) {
+    const d = Math.hypot(lat - f.lat, lon - f.lon);
+    if (d < bestDist) {
+      bestDist = d;
+      best = f.city;
+    }
+  }
+  return best || "";
 }
 
 function calculateRadius(f) {

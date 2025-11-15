@@ -18,6 +18,7 @@ function buildUI() {
   buildCombinedSectorFilters();
   buildLegend();
   buildMetricControls();
+  buildNewFacilityButton(); 
 
   document.getElementById('totalCount').textContent =
     Object.values(markers).reduce((sum, items) => sum + items.length, 0);
@@ -218,6 +219,25 @@ function syncSelectAllSectorsState() {
   
   selectAll.checked = allChecked;
   selectAll.indeterminate = !allChecked && !noneChecked;
+}
+
+function buildNewFacilityButton() {
+  if (document.getElementById("newFacilityBtn")) return;
+
+  const btn = document.createElement("button");
+  btn.id = "newFacilityBtn";
+  btn.className = "new-facility-btn";
+  btn.textContent = "➕ New Facility";
+
+  btn.onclick = () => {
+    if (typeof createNewFacility === "function") {
+      createNewFacility();
+    } else {
+      console.error("createNewFacility() not found");
+    }
+  };
+
+  document.body.appendChild(btn);
 }
 
 function buildLegend() {

@@ -96,8 +96,16 @@ async function saveAttributeOverride(facility) {
     province: facility.province,
     sector: facility.sector,
     subcategory: facility.subcategory,
+
     capacity: facility.capacity,
     unit: facility.unit,
+
+    lat: facility.lat,
+    lon: facility.lon,
+    dataset: facility.dataset || "New",
+
+    _isNew: !!facility._isNew,
+
     timestamp: new Date().toISOString()
   };
   
@@ -127,48 +135,55 @@ async function initPositionCache() {
     return;
   }
 
+  let posCount = 0;
+  let attrCount = 0;
+  let newFacilityCount = 0;
+  let delCount = 0;
+
   try {
     const posResult = await window.storage.list("marker-pos:");
     if (posResult && posResult.keys) {
       for (const key of posResult.keys) {
         const stored = await window.storage.get(key);
-        if (!stored || !stored.value) continue;
-
-        const override = JSON.parse(stored.value);
-        window._positionCache[key] = override;
+        if (!stored?.value) continue;
+        window._positionCache[key] = JSON.parse(stored.value);
       }
-      console.log(`✓ Loaded ${posResult.keys.length} position overrides`);
+      posCount = posResult.keys.length;
     }
 
     const attrResult = await window.storage.list("marker-attr:");
     if (attrResult && attrResult.keys) {
       for (const key of attrResult.keys) {
         const stored = await window.storage.get(key);
-        if (!stored || !stored.value) continue;
-
+        if (!stored?.value) continue;
         const override = JSON.parse(stored.value);
         window._attributeCache[key] = override;
+
+        const delKey = `delete:${key}`;
+        const deleted = window._deleteCache && window._deleteCache[delKey];
+
+        if (override && override._isNew && !deleted) {
+            newFacilityCount++;
+        }
       }
-      console.log(`✓ Loaded ${attrResult.keys.length} attribute overrides`);
+      attrCount = attrResult.keys.length;
     }
 
     const delResult = await window.storage.list("delete:");
     if (delResult && delResult.keys) {
       for (const key of delResult.keys) {
         const stored = await window.storage.get(key);
-        if (stored && stored.value === "1") {
-          window._deleteCache[key] = true;
-        }
+        if (stored && stored.value === "1") window._deleteCache[key] = true;
       }
-      console.log(`✓ Loaded ${delResult.keys.length} deleted markers`);
+      delCount = delResult.keys.length;
     }
 
-    setTimeout(() => {
-      const hasEdits =
-        Object.keys(window._positionCache).length > 0 ||
-        Object.keys(window._attributeCache).length > 0 ||
-        Object.keys(window._deleteCache).length > 0;
+    console.log(
+      `[-] Persistent Load Summary: ${posCount} positions, ${attrCount} attributes, ${newFacilityCount} new facilities, ${delCount} deletions`
+    );
 
+    setTimeout(() => {
+      const hasEdits = posCount > 0 || attrCount > 0 || delCount > 0;
       const btn = document.getElementById('resetEditsBtn');
       if (btn) btn.classList.toggle("hidden", !hasEdits);
     }, 50);
@@ -233,38 +248,33 @@ async function revertMarkerAttributes() {
 }
 
 async function deleteMarker() {
-  if (!editingMarker || !editingFacility) {
-    console.warn("Delete requested but no editing marker active.");
-    return;
-  }
+  if (!editingMarker || !editingFacility) return;
 
-  editingMarker._deleted = true;
+  const key = sanitizeStorageKey(editingFacility.name);
 
-  const safeKey = `delete:${sanitizeStorageKey(editingFacility.name)}`;
+  const delKey = `delete:${key}`;
+  const attrKey = `marker-attr:${key}`;
 
   try {
     if (window.storage) {
-      await window.storage.set(safeKey, "1");
+      await window.storage.set(delKey, "1");
+
+      await window.storage.delete(attrKey);
+
+      if (window._attributeCache && window._attributeCache[attrKey]) {
+        delete window._attributeCache[attrKey];
+      }
     }
 
-    if (!window._deleteCache) window._deleteCache = {};
-    window._deleteCache[safeKey] = true;
-
+    editingMarker._deleted = true;
     map.removeLayer(editingMarker);
 
-    if (editingMarker.getPopup()) {
-      editingMarker.closePopup();
-    }
-
-    showSaveNotification('Marker deleted', true);
+    showSaveNotification("Facility deleted", true);
     showResetButton();
-
   } catch (err) {
-    console.error("Failed to delete marker:", err);
+    console.error("Delete failed:", err);
+    showSaveNotification("Failed to delete facility", false);
   }
-
-  editingMarker = null;
-  editingFacility = null;
 }
 
 function createMoveButton() {
@@ -429,7 +439,14 @@ function showAttributeEditForm() {
 }
 
 async function saveAttributeChanges() {
-  if (!editingMarker || !editingFacility) return;
+  if (!editingMarker || !editingFacility) {
+    console.warn("saveAttributeChanges called with no active editing marker/facility");
+    attributeEditMode = false;
+    return;
+  }
+
+  const marker = editingMarker;
+  const facility = editingFacility;
 
   const name = document.getElementById('edit-name')?.value;
   const operator = document.getElementById('edit-operator')?.value;
@@ -440,61 +457,67 @@ async function saveAttributeChanges() {
   const capacity = parseFloat(document.getElementById('edit-capacity')?.value) || 0;
   const unit = document.getElementById('edit-unit')?.value;
 
-  if (!editingFacility._originalAttrs) {
-    editingFacility._originalAttrs = {
-      name: editingFacility.name,
-      operator: editingFacility.operator,
-      city: editingFacility.city,
-      province: editingFacility.province,
-      sector: editingFacility.sector,
-      subcategory: editingFacility.subcategory,
-      capacity: editingFacility.capacity,
-      unit: editingFacility.unit
+  if (!facility._originalAttrs) {
+    facility._originalAttrs = {
+      name: facility.name,
+      operator: facility.operator,
+      city: facility.city,
+      province: facility.province,
+      sector: facility.sector,
+      subcategory: facility.subcategory,
+      capacity: facility.capacity,
+      unit: facility.unit
     };
   }
 
   const changed = 
-    name !== editingFacility.name ||
-    operator !== editingFacility.operator ||
-    city !== editingFacility.city ||
-    province !== editingFacility.province ||
-    sector !== editingFacility.sector ||
-    subcategory !== editingFacility.subcategory ||
-    capacity !== editingFacility.capacity ||
-    unit !== editingFacility.unit;
+    name !== facility.name ||
+    operator !== facility.operator ||
+    city !== facility.city ||
+    province !== facility.province ||
+    sector !== facility.sector ||
+    subcategory !== facility.subcategory ||
+    capacity !== facility.capacity ||
+    unit !== facility.unit;
 
-  if (changed) {
-    editingFacility.name = name;
-    editingFacility.operator = operator;
-    editingFacility.city = city;
-    editingFacility.province = province;
-    editingFacility.sector = sector;
-    editingFacility.subcategory = subcategory;
-    editingFacility.capacity = capacity;
-    editingFacility.unit = unit;
+  if (!changed) return;
 
-    const color = SUBCATEGORY_COLORS[subcategory] || SECTOR_COLORS[sector] || '#555';
-    editingMarker.setStyle({ color, fillColor: color });
+  facility.name = name;
+  facility.operator = operator;
+  facility.city = city;
+  facility.province = province;
+  facility.sector = sector;
+  facility.subcategory = subcategory;
+  facility.capacity = capacity;
+  facility.unit = unit;
 
-    editingMarker.unbindTooltip();
-    editingMarker.bindTooltip(`${name} • ${subcategory}`);
+  const color = SUBCATEGORY_COLORS[subcategory] || SECTOR_COLORS[sector] || '#555';
+  marker.setStyle({ color, fillColor: color });
 
-    const success = await saveAttributeOverride(editingFacility);
-    
-    if (success) {
-      showSaveNotification('Attributes updated', true);
-      showResetButton();
-    } else {
-      showSaveNotification('Failed to save attributes', false);
-    }
+  marker.unbindTooltip();
+  marker.bindTooltip(`${name} • ${subcategory}`);
 
-    editingMarker.closePopup();
+  const success = await saveAttributeOverride(facility);
+  
+  if (success) {
+    showSaveNotification('Attributes updated', true);
+    showResetButton();
+  } else {
+    showSaveNotification('Failed to save attributes', false);
+  }
+
+  if (!marker) return;
+
+  try {
+    marker.closePopup();
     setTimeout(() => {
-      const newPopup = createEditablePopup(editingFacility);
-      editingMarker.setPopupContent(newPopup);
-      editingMarker._popupContent = newPopup;
-      editingMarker.openPopup();
+      const newPopup = createEditablePopup(facility);
+      marker.setPopupContent(newPopup);
+      marker._popupContent = newPopup;
+      marker.openPopup();
     }, 100);
+  } catch (e) {
+    console.warn("Failed to refresh popup after save:", e);
   }
 }
 
@@ -745,7 +768,7 @@ function createEditablePopup(facility) {
 }
 
 function trackEditingMarker(marker, facility) {
-  marker.on('popupopen', function() {
+  marker.on('popupopen', function () {
     if (marker._dragging) return;
 
     editingMarker = marker;
@@ -757,20 +780,20 @@ function trackEditingMarker(marker, facility) {
   });
   
   marker.on('popupclose', function () {
-      if (marker._deleted || marker._dragging || isDragging) return;
+    if (marker._deleted || marker._dragging || isDragging) return;
 
-      if (editMode) {
-          const btn = document.getElementById('moveToggleBtn');
-          if (btn) toggleMoveMode();
-      }
+    if (editMode) {
+      const btn = document.getElementById('moveToggleBtn');
+      if (btn) toggleMoveMode();
+    }
 
-      if (attributeEditMode) {
-          const btn = document.getElementById('attributeEditBtn');
-          if (btn) toggleAttributeEditMode();
-      }
+    if (attributeEditMode) {
+      const btn = document.getElementById('attributeEditBtn');
+      if (btn) toggleAttributeEditMode();
+    }
 
-      editingMarker = null;
-      editingFacility = null;
+    editingMarker = null;
+    editingFacility = null;
   });
 }
 
